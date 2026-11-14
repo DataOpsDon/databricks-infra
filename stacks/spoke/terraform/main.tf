@@ -52,8 +52,10 @@ module "virtual_network" {
   parent_id        = module.resource_group.resource_id
   name             = module.naming.virtual_network.name
   address_space    = [var.vnet_address_space]
-  dns_servers      = length(var.dns_servers) > 0 ? { dns_servers = var.dns_servers } : null
-  tags             = var.tags
+  dns_servers = {
+    dns_servers = ["10.10.0.132"]
+  }
+  tags = var.tags
 
   subnets = {
     databricks_host = {

@@ -60,3 +60,9 @@ variable "spoke_virtual_network_ids" {
   type        = map(string)
   default     = {}
 }
+
+variable "devops_infrastructure_principal_id" {
+  description = "Object ID of the DevOpsInfrastructure service principal (az ad sp show --id 'DevOpsInfrastructure' or look it up by that name in Entra ID). When set, it gets Network Contributor on the VNet so Managed DevOps Pools can use the delegated subnet."
+  type        = string
+  default     = null
+}

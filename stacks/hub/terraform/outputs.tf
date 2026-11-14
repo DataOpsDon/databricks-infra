@@ -51,3 +51,18 @@ output "databricks_workspace_url" {
   description = "The workspace URL (resolves to a private IP through the private DNS zone)"
   value       = module.databricks_workspace.databricks_workspace_url
 }
+
+output "jumpbox_subnet_id" {
+  description = "Subnet ID for the jump box VM (same VNet as Bastion Developer)"
+  value       = module.virtual_network.subnets["jumpbox"].resource_id
+}
+
+output "devops_pool_subnet_id" {
+  description = "Delegated subnet ID for Managed DevOps Pool runners"
+  value       = module.virtual_network.subnets["devops_pool"].resource_id
+}
+
+output "bastion_name" {
+  description = "Name of the Bastion host (Developer SKU)"
+  value       = module.bastion.name
+}

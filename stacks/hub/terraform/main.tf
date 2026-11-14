@@ -39,6 +39,25 @@ module "network_security_group" {
   tags             = var.tags
 }
 
+// Module: nat_gateway
+// Purpose: Outbound internet for the Managed DevOps Pool subnet (runners must reach GitHub and package feeds).
+// Subnets have default outbound access disabled, so without this the runners cannot register.
+module "nat_gateway" {
+  source           = "Azure/avm-res-network-natgateway/azurerm"
+  version          = "0.4.0"
+  enable_telemetry = var.enable_telemetry
+  location         = var.location
+  parent_id        = module.resource_group.resource_id
+  name             = module.naming.nat_gateway.name
+  tags             = var.tags
+
+  public_ips = {
+    primary = {
+      name = "${module.naming.public_ip.slug}-natgw-${local.name_suffix}"
+    }
+  }
+}
+
 // Module: virtual_network
 // Purpose: Hub virtual network (/22) with two /26 Databricks subnets (host and container)
 // a subnet for private endpoints and a small subnet for the private DNS resolver inbound endpoint.
@@ -50,8 +69,19 @@ module "virtual_network" {
   parent_id        = module.resource_group.resource_id
   name             = module.naming.virtual_network.name
   address_space    = [var.vnet_address_space]
-  tags             = var.tags
-  dns_servers      = ["10.10.0.132"]
+
+  # Managed DevOps Pools needs Network Contributor on the VNet to attach runners to the delegated subnet.
+  role_assignments = var.devops_infrastructure_principal_id == null ? {} : {
+    devops_infrastructure = {
+      role_definition_id_or_name = "Network Contributor"
+      principal_id               = var.devops_infrastructure_principal_id
+      principal_type             = "ServicePrincipal"
+    }
+  }
+  tags = var.tags
+  dns_servers = {
+    dns_servers = ["10.10.0.132"]
+  }
   subnets = {
     databricks_host = {
       name             = local.subnet_names.databricks_host
@@ -82,6 +112,23 @@ module "virtual_network" {
     private_endpoints = {
       name             = local.subnet_names.private_endpoints
       address_prefixes = [local.subnet_prefixes.private_endpoints]
+    }
+    jumpbox = {
+      name             = local.subnet_names.jumpbox
+      address_prefixes = [local.subnet_prefixes.jumpbox]
+    }
+    devops_pool = {
+      name             = local.subnet_names.devops_pool
+      address_prefixes = [local.subnet_prefixes.devops_pool]
+      nat_gateway = {
+        id = module.nat_gateway.resource_id
+      }
+      delegations = [{
+        name = "devopspool"
+        service_delegation = {
+          name = "Microsoft.DevOpsInfrastructure/pools"
+        }
+      }]
     }
     dns_resolver_inbound = {
       name             = local.subnet_names.dns_resolver_inbound
@@ -204,4 +251,20 @@ module "databricks_workspace" {
       private_dns_zone_resource_ids   = [module.private_dns_zone_databricks.resource_id]
     }
   }
+}
+
+// Module: bastion
+// Purpose: Azure Bastion, Developer SKU (free, shared pool, no public IP and no AzureBastionSubnet). The Developer SKU
+// only reaches VMs in this same VNet (no peering support), which is why the jump box subnet lives here.
+module "bastion" {
+  source             = "Azure/avm-res-network-bastionhost/azurerm"
+  version            = "0.9.0"
+  enable_telemetry   = var.enable_telemetry
+  location           = var.location
+  parent_id          = module.resource_group.resource_id
+  name               = module.naming.bastion_host.name
+  sku                = "Developer"
+  virtual_network_id = module.virtual_network.resource_id
+  zones              = []
+  tags               = var.tags
 }
