@@ -47,6 +47,11 @@ module "jumpbox" {
 
   encryption_at_host_enabled = var.jumpbox_encryption_at_host_enabled
 
+  # The Azure Edition image is hotpatch enabled, which requires platform-orchestrated patching.
+  hotpatching_enabled   = true
+  patch_mode            = "AutomaticByPlatform"
+  patch_assessment_mode = "AutomaticByPlatform"
+
   source_image_reference = {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
