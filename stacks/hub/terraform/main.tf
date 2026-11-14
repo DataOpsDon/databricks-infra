@@ -99,7 +99,7 @@ module "private_dns_resolver" {
   source                      = "Azure/avm-res-network-dnsresolver/azurerm"
   version                     = "0.9.0"
   enable_telemetry            = var.enable_telemetry
-  location                    = var.location
+  location                    = "Global"
   parent_id                   = module.resource_group.resource_id
   name                        = module.naming.dns_private_resolver.name
   virtual_network_resource_id = module.virtual_network.resource_id
@@ -121,7 +121,7 @@ module "private_dns_resolver" {
 module "private_dns_zone_databricks" {
   source           = "Azure/avm-res-network-privatednszone/azurerm"
   version          = "0.6.0"
-  enable_telemetry = var.enable_telemetry
+  enable_telemetry = false
   parent_id        = module.resource_group.resource_id
   domain_name      = "privatelink.azuredatabricks.net"
   tags             = var.tags
