@@ -53,11 +53,11 @@ output "databricks_workspace_url" {
 }
 
 output "jumpbox_subnet_id" {
-  description = "Subnet ID for the jump box VM (same VNet as Bastion Developer)"
+  description = "Subnet ID for the jump box VM (same VNet as Bastion)"
   value       = module.virtual_network.subnets["jumpbox"].resource_id
 }
 
 output "bastion_name" {
-  description = "Name of the Bastion host (Developer SKU)"
+  description = "Name of the Bastion host (Standard SKU)"
   value       = module.bastion.name
 }

@@ -15,7 +15,7 @@ tags:
   ReviewDate: "YY/MM"
 
 # State Variables
-subscriptionId_State: "<Fill Me In>"  # Subscription ID for TF State Storage
+subscriptionId_State: "1e1f62ac-0120-4c72-b6a7-87eb14060fb9"  # Subscription ID for TF State Storage
 tags_state:
   Service: "TerraformState"
 
@@ -31,13 +31,13 @@ stateStorageSku: Standard_ZRS  # Options: Standard_LRS, Standard_GRS, Standard_R
 stateStoragePublic_network_access_enabled: true
 
 # UMI Variables
-subscriptionId_umi: "<Fill Me In>"  # Subscription ID for User Managed Identities for Deployment
+subscriptionId_umi: "1e1f62ac-0120-4c72-b6a7-87eb14060fb9"  # Subscription ID for User Managed Identities for Deployment
 tags_umi:
   Service: "Deployment MI"
 
 # Service Connection Variables
-subscriptionId_Application: "<Fill Me In>"  # Subscription ID for Application/Workload Deployment
-subscriptionName_Application: "<Fill Me In>"  # Subscription Name for Application/Workload Deployment
+subscriptionId_Application: "1e1f62ac-0120-4c72-b6a7-87eb14060fb9"  # Subscription ID for Application/Workload Deployment
+subscriptionName_Application: "Azure subscription 1"  # Subscription Name for Application/Workload Deployment
 
 # GitHub Variables (cicdPlatform: github)
 isFirstTimeDeployToGH: <Fill Me In> # true / false RUN ONCE per repository: repository guardrails (rulesets, Actions policy, security) and role teams
