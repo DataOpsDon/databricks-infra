@@ -177,7 +177,7 @@ module "managed_devops_pool" {
   location                       = var.location
   resource_group_name            = module.resource_group.name
   name                           = "mdp-${local.name_suffix}"
-  dev_center_project_resource_id = var.dev_center_project_resource_id
+  dev_center_project_resource_id = module.dev_center.resource_id
   subnet_id                      = module.virtual_network.subnets["devops_pool"].resource_id
   maximum_concurrency            = var.devops_pool_max_concurrency
   fabric_profile_sku_name        = var.devops_pool_sku_name
