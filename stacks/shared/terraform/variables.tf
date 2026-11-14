@@ -49,11 +49,6 @@ variable "jumpbox_subnet_id" {
   type        = string
 }
 
-variable "devops_pool_subnet_id" {
-  description = "Delegated subnet resource ID for the Managed DevOps Pool (hub output devops_pool_subnet_id)."
-  type        = string
-}
-
 variable "jumpbox_computer_name" {
   description = "Windows computer name of the jump box (15 characters or fewer)."
   type        = string
@@ -104,4 +99,37 @@ variable "devops_pool_sku_name" {
   description = "VM size of the runners."
   type        = string
   default     = "Standard_D2ads_v5"
+}
+
+variable "vnet_address_space" {
+  description = "Address space of the shared virtual network. Must be a /22 that does not overlap the hub or the spoke."
+  type        = string
+  default     = "10.30.0.0/22"
+
+  validation {
+    condition     = can(cidrhost(var.vnet_address_space, 0)) && tonumber(split("/", var.vnet_address_space)[1]) == 22
+    error_message = "vnet_address_space must be a valid CIDR range with a /22 prefix length."
+  }
+}
+
+variable "hub_virtual_network_id" {
+  description = "Resource ID of the hub virtual network to peer with (hub output virtual_network_id)."
+  type        = string
+}
+
+variable "spoke_virtual_network_id" {
+  description = "Resource ID of the spoke virtual network to peer with (spoke output virtual_network_id)."
+  type        = string
+}
+
+variable "dns_servers" {
+  description = "DNS servers for the shared VNet, normally the hub private DNS resolver inbound IPs (hub output private_dns_resolver_inbound_ips). Empty uses Azure-provided DNS."
+  type        = list(string)
+  default     = []
+}
+
+variable "devops_infrastructure_principal_id" {
+  description = "Object ID of the DevOpsInfrastructure service principal (look it up by that name in Entra ID). When set, it gets Network Contributor on the shared VNet so Managed DevOps Pools can use the delegated subnet."
+  type        = string
+  default     = null
 }

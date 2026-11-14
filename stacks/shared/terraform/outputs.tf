@@ -34,3 +34,8 @@ output "managed_devops_pool_id" {
   description = "Resource ID of the Managed DevOps Pool"
   value       = module.managed_devops_pool.resource_id
 }
+
+output "virtual_network_id" {
+  description = "The ID of the shared virtual network"
+  value       = module.virtual_network.resource_id
+}

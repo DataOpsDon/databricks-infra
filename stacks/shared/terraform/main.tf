@@ -5,8 +5,8 @@
 // Notes:
 // - Naming is centralised via the `naming` module to ensure consistent resource names across environments.
 // - Only Azure Verified Modules (AVM) are used: no `resource` blocks and no custom modules.
-// - The VM and the runners sit in subnets of the hub VNet (created by the hub stack, passed in as variables), because
-//   Bastion Developer only reaches VMs in its own VNet and the runners need the hub's peering to reach the spokes.
+// - The jump box sits in a hub VNet subnet (passed in as a variable), because Bastion Developer only reaches VMs in
+//   its own VNet. The Managed DevOps Pool runs in this stack's own VNet, peered to the hub and the spoke.
 
 // Module: naming
 // Purpose: Centralised naming standards for resources (project, environment, location short code).
@@ -50,7 +50,7 @@ module "jumpbox" {
   source_image_reference = {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
-    sku       = "2022-datacenter-azure-edition"
+    sku       = "2025-datacenter-azure-edition"
     version   = "latest"
   }
 
@@ -63,6 +63,88 @@ module "jumpbox" {
           private_ip_subnet_resource_id = var.jumpbox_subnet_id
         }
       }
+    }
+  }
+}
+
+// Module: nat_gateway
+// Purpose: Outbound internet for the runner subnet (runners must reach GitHub and package feeds). Subnets have
+// default outbound access disabled, so without this the runners cannot register.
+module "nat_gateway" {
+  source           = "Azure/avm-res-network-natgateway/azurerm"
+  version          = "0.4.0"
+  enable_telemetry = var.enable_telemetry
+  location         = var.location
+  parent_id        = module.resource_group.resource_id
+  name             = module.naming.nat_gateway.name
+  tags             = var.tags
+
+  public_ips = {
+    primary = {
+      name = "${module.naming.public_ip.slug}-natgw-${local.name_suffix}"
+    }
+  }
+}
+
+// Module: virtual_network
+// Purpose: Shared virtual network (/22) with a delegated subnet for the Managed DevOps Pool runners. Peered to the hub
+// and the spoke in both directions (reverse peerings are created in their VNets' resource groups).
+module "virtual_network" {
+  source           = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version          = "0.23.0"
+  enable_telemetry = var.enable_telemetry
+  location         = var.location
+  parent_id        = module.resource_group.resource_id
+  name             = module.naming.virtual_network.name
+  address_space    = [var.vnet_address_space]
+  dns_servers      = length(var.dns_servers) > 0 ? { dns_servers = var.dns_servers } : null
+  tags             = var.tags
+
+  # Managed DevOps Pools needs Network Contributor on the VNet to attach runners to the delegated subnet.
+  role_assignments = var.devops_infrastructure_principal_id == null ? {} : {
+    devops_infrastructure = {
+      role_definition_id_or_name = "Network Contributor"
+      principal_id               = var.devops_infrastructure_principal_id
+      principal_type             = "ServicePrincipal"
+    }
+  }
+
+  subnets = {
+    devops_pool = {
+      name             = local.subnet_names.devops_pool
+      address_prefixes = [local.subnet_prefixes.devops_pool]
+      nat_gateway = {
+        id = module.nat_gateway.resource_id
+      }
+      delegations = [{
+        name = "devopspool"
+        service_delegation = {
+          name = "Microsoft.DevOpsInfrastructure/pools"
+        }
+      }]
+    }
+  }
+
+  peerings = {
+    shared_to_hub = {
+      name                                 = "peer-${local.name_suffix}-to-hub"
+      remote_virtual_network_resource_id   = var.hub_virtual_network_id
+      allow_forwarded_traffic              = true
+      allow_virtual_network_access         = true
+      create_reverse_peering               = true
+      reverse_name                         = "peer-hub-to-${local.name_suffix}"
+      reverse_allow_forwarded_traffic      = true
+      reverse_allow_virtual_network_access = true
+    }
+    shared_to_spoke = {
+      name                                 = "peer-${local.name_suffix}-to-spoke"
+      remote_virtual_network_resource_id   = var.spoke_virtual_network_id
+      allow_forwarded_traffic              = true
+      allow_virtual_network_access         = true
+      create_reverse_peering               = true
+      reverse_name                         = "peer-spoke-to-${local.name_suffix}"
+      reverse_allow_forwarded_traffic      = true
+      reverse_allow_virtual_network_access = true
     }
   }
 }
@@ -80,8 +162,8 @@ module "dev_center" {
 }
 
 // Module: managed_devops_pool
-// Purpose: Managed DevOps Pool of private runners, injected into the delegated hub subnet (outbound through the hub NAT
-// gateway, private reach to the spokes over peering). It attaches to a Dev Center project, which has no AVM module,
+// Purpose: Managed DevOps Pool of private runners, injected into the delegated subnet of the shared VNet (outbound
+// through the NAT gateway, private reach to the hub and spoke over peering). It attaches to a Dev Center project, which has no AVM module,
 // so the project ID is an input (var.dev_center_project_resource_id).
 module "managed_devops_pool" {
   source                         = "Azure/avm-res-devopsinfrastructure-pool/azurerm"
@@ -91,7 +173,7 @@ module "managed_devops_pool" {
   resource_group_name            = module.resource_group.name
   name                           = "mdp-${local.name_suffix}"
   dev_center_project_resource_id = var.dev_center_project_resource_id
-  subnet_id                      = var.devops_pool_subnet_id
+  subnet_id                      = module.virtual_network.subnets["devops_pool"].resource_id
   maximum_concurrency            = var.devops_pool_max_concurrency
   fabric_profile_sku_name        = var.devops_pool_sku_name
   tags                           = var.tags

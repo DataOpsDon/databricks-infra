@@ -57,11 +57,6 @@ output "jumpbox_subnet_id" {
   value       = module.virtual_network.subnets["jumpbox"].resource_id
 }
 
-output "devops_pool_subnet_id" {
-  description = "Delegated subnet ID for Managed DevOps Pool runners"
-  value       = module.virtual_network.subnets["devops_pool"].resource_id
-}
-
 output "bastion_name" {
   description = "Name of the Bastion host (Developer SKU)"
   value       = module.bastion.name

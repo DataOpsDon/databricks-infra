@@ -39,25 +39,6 @@ module "network_security_group" {
   tags             = var.tags
 }
 
-// Module: nat_gateway
-// Purpose: Outbound internet for the Managed DevOps Pool subnet (runners must reach GitHub and package feeds).
-// Subnets have default outbound access disabled, so without this the runners cannot register.
-module "nat_gateway" {
-  source           = "Azure/avm-res-network-natgateway/azurerm"
-  version          = "0.4.0"
-  enable_telemetry = var.enable_telemetry
-  location         = var.location
-  parent_id        = module.resource_group.resource_id
-  name             = module.naming.nat_gateway.name
-  tags             = var.tags
-
-  public_ips = {
-    primary = {
-      name = "${module.naming.public_ip.slug}-natgw-${local.name_suffix}"
-    }
-  }
-}
-
 // Module: virtual_network
 // Purpose: Hub virtual network (/22) with two /26 Databricks subnets (host and container)
 // a subnet for private endpoints and a small subnet for the private DNS resolver inbound endpoint.
@@ -69,16 +50,7 @@ module "virtual_network" {
   parent_id        = module.resource_group.resource_id
   name             = module.naming.virtual_network.name
   address_space    = [var.vnet_address_space]
-
-  # Managed DevOps Pools needs Network Contributor on the VNet to attach runners to the delegated subnet.
-  role_assignments = var.devops_infrastructure_principal_id == null ? {} : {
-    devops_infrastructure = {
-      role_definition_id_or_name = "Network Contributor"
-      principal_id               = var.devops_infrastructure_principal_id
-      principal_type             = "ServicePrincipal"
-    }
-  }
-  tags = var.tags
+  tags             = var.tags
   dns_servers = {
     dns_servers = ["10.10.0.132"]
   }
@@ -116,19 +88,6 @@ module "virtual_network" {
     jumpbox = {
       name             = local.subnet_names.jumpbox
       address_prefixes = [local.subnet_prefixes.jumpbox]
-    }
-    devops_pool = {
-      name             = local.subnet_names.devops_pool
-      address_prefixes = [local.subnet_prefixes.devops_pool]
-      nat_gateway = {
-        id = module.nat_gateway.resource_id
-      }
-      delegations = [{
-        name = "devopspool"
-        service_delegation = {
-          name = "Microsoft.DevOpsInfrastructure/pools"
-        }
-      }]
     }
     dns_resolver_inbound = {
       name             = local.subnet_names.dns_resolver_inbound

@@ -7,14 +7,12 @@ locals {
   #   0.128/28 Private DNS resolver inbound endpoint
   #   0.192/26 Private endpoints (Databricks workspace and browser authentication)
   #   1.0/26   Jump box VM (reached through Bastion Developer)
-  #   1.64/26  Managed DevOps Pool runners (delegated, NAT gateway for outbound)
   subnet_prefixes = {
     databricks_host      = cidrsubnet(var.vnet_address_space, 4, 0)
     databricks_container = cidrsubnet(var.vnet_address_space, 4, 1)
     dns_resolver_inbound = cidrsubnet(var.vnet_address_space, 6, 8)
     private_endpoints    = cidrsubnet(var.vnet_address_space, 4, 3)
     jumpbox              = cidrsubnet(var.vnet_address_space, 4, 4)
-    devops_pool          = cidrsubnet(var.vnet_address_space, 4, 5)
   }
 
   subnet_names = {
@@ -23,6 +21,5 @@ locals {
     dns_resolver_inbound = "${module.naming.subnet.slug}-dnsresolver-in-${local.name_suffix}"
     private_endpoints    = "${module.naming.subnet.slug}-privateendpoints-${local.name_suffix}"
     jumpbox              = "${module.naming.subnet.slug}-jumpbox-${local.name_suffix}"
-    devops_pool          = "${module.naming.subnet.slug}-devopspool-${local.name_suffix}"
   }
 }
