@@ -1,0 +1,6 @@
+# The dev container runs these inside Linux: always check them out with LF line
+# endings, whatever the developer's core.autocrlf setting (CRLF breaks bash).
+*.sh   text eol=lf
+*.json text eol=lf
+# Ignition CLI wheel installed by post-create.sh - never touch its bytes.
+*.whl  binary
