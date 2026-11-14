@@ -129,7 +129,7 @@ module "private_dns_zone_databricks" {
   parent_id        = module.resource_group.resource_id
   domain_name      = "privatelink.azuredatabricks.net"
   tags             = var.tags
-  
+
   virtual_network_links = {
     hub = {
       name               = "link-${module.naming.virtual_network.name}"
