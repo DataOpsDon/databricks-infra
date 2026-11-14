@@ -89,10 +89,6 @@ module "virtual_network" {
       name             = local.subnet_names.bastion
       address_prefixes = [local.subnet_prefixes.bastion]
     }
-    jumpbox = {
-      name             = local.subnet_names.jumpbox
-      address_prefixes = [local.subnet_prefixes.jumpbox]
-    }
     dns_resolver_inbound = {
       name             = local.subnet_names.dns_resolver_inbound
       address_prefixes = [local.subnet_prefixes.dns_resolver_inbound]

@@ -25,16 +25,6 @@ output "jumpbox_admin_password" {
   sensitive   = true
 }
 
-output "dev_center_id" {
-  description = "Dev Center resource ID (parent of the Dev Center project the pool needs)"
-  value       = module.dev_center.resource_id
-}
-
-output "managed_devops_pool_id" {
-  description = "Resource ID of the Managed DevOps Pool"
-  value       = module.managed_devops_pool.resource_id
-}
-
 output "virtual_network_id" {
   description = "The ID of the shared virtual network"
   value       = module.virtual_network.resource_id
