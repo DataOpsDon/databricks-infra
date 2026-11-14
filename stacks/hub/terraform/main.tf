@@ -18,5 +18,3 @@ module "resource_group" {
   name             = "rg-hub"
   tags             = var.tags
 }
-
-
