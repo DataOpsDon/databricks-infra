@@ -36,3 +36,13 @@ output "private_dns_zone_databricks_id" {
   description = "The ID of the privatelink.azuredatabricks.net private DNS zone"
   value       = module.private_dns_zone_databricks.resource_id
 }
+
+output "databricks_workspace_id" {
+  description = "The Azure resource ID of the Databricks workspace"
+  value       = module.databricks_workspace.resource_id
+}
+
+output "databricks_workspace_url" {
+  description = "The workspace URL (resolves to a private IP through the private DNS zone)"
+  value       = module.databricks_workspace.databricks_workspace_url
+}
