@@ -51,7 +51,9 @@ module "virtual_network" {
   name             = module.naming.virtual_network.name
   address_space    = [var.vnet_address_space]
   tags             = var.tags
-
+  dns_servers = {
+    dns_servers = ["10.10.0.132"]
+  }
   subnets = {
     databricks_host = {
       name             = local.subnet_names.databricks_host
@@ -82,6 +84,10 @@ module "virtual_network" {
     private_endpoints = {
       name             = local.subnet_names.private_endpoints
       address_prefixes = [local.subnet_prefixes.private_endpoints]
+    }
+    jumpbox = {
+      name             = local.subnet_names.jumpbox
+      address_prefixes = [local.subnet_prefixes.jumpbox]
     }
     dns_resolver_inbound = {
       name             = local.subnet_names.dns_resolver_inbound
@@ -138,6 +144,33 @@ module "private_dns_zone_databricks" {
   }
 }
 
+// Module: private_dns_zone_dfs
+// Purpose: privatelink.dfs.core.windows.net for ADLS Gen2 dfs private endpoints (deployed by the spoke stack).
+// Linked to the hub VNet, plus any spoke VNets listed in var.spoke_virtual_network_ids.
+module "private_dns_zone_dfs" {
+  source           = "Azure/avm-res-network-privatednszone/azurerm"
+  version          = "0.6.0"
+  enable_telemetry = false
+  parent_id        = module.resource_group.resource_id
+  domain_name      = "privatelink.dfs.core.windows.net"
+  tags             = var.tags
+
+  virtual_network_links = merge(
+    {
+      hub = {
+        name               = "link-${module.naming.virtual_network.name}"
+        virtual_network_id = module.virtual_network.resource_id
+      }
+    },
+    {
+      for k, id in var.spoke_virtual_network_ids : k => {
+        name               = "link-${k}-${local.name_suffix}"
+        virtual_network_id = id
+      }
+    }
+  )
+}
+
 // Module: databricks_workspace
 // Purpose: Premium Databricks workspace injected into the hub VNet (secure cluster connectivity, no public IPs),
 // with public network access disabled. It is reachable only through its private endpoints:
@@ -177,4 +210,20 @@ module "databricks_workspace" {
       private_dns_zone_resource_ids   = [module.private_dns_zone_databricks.resource_id]
     }
   }
+}
+
+// Module: bastion
+// Purpose: Azure Bastion, Developer SKU (free, shared pool, no public IP and no AzureBastionSubnet). The Developer SKU
+// only reaches VMs in this same VNet (no peering support), which is why the jump box subnet lives here.
+module "bastion" {
+  source             = "Azure/avm-res-network-bastionhost/azurerm"
+  version            = "0.9.0"
+  enable_telemetry   = var.enable_telemetry
+  location           = var.location
+  parent_id          = module.resource_group.resource_id
+  name               = module.naming.bastion_host.name
+  sku                = "Developer"
+  virtual_network_id = module.virtual_network.resource_id
+  zones              = []
+  tags               = var.tags
 }

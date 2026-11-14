@@ -37,6 +37,11 @@ output "private_dns_zone_databricks_id" {
   value       = module.private_dns_zone_databricks.resource_id
 }
 
+output "private_dns_zone_dfs_id" {
+  description = "The ID of the privatelink.dfs.core.windows.net private DNS zone"
+  value       = module.private_dns_zone_dfs.resource_id
+}
+
 output "databricks_workspace_id" {
   description = "The Azure resource ID of the Databricks workspace"
   value       = module.databricks_workspace.resource_id
@@ -45,4 +50,14 @@ output "databricks_workspace_id" {
 output "databricks_workspace_url" {
   description = "The workspace URL (resolves to a private IP through the private DNS zone)"
   value       = module.databricks_workspace.databricks_workspace_url
+}
+
+output "jumpbox_subnet_id" {
+  description = "Subnet ID for the jump box VM (same VNet as Bastion Developer)"
+  value       = module.virtual_network.subnets["jumpbox"].resource_id
+}
+
+output "bastion_name" {
+  description = "Name of the Bastion host (Developer SKU)"
+  value       = module.bastion.name
 }

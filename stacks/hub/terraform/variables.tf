@@ -54,3 +54,9 @@ variable "vnet_address_space" {
     error_message = "vnet_address_space must be a valid CIDR range with a /22 prefix length."
   }
 }
+
+variable "spoke_virtual_network_ids" {
+  description = "Spoke VNet resource IDs (map of short name to ID) to link to the private DNS zones. Leave empty until the spoke exists, then add its virtual_network_id output."
+  type        = map(string)
+  default     = {}
+}
