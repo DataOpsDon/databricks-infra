@@ -99,7 +99,7 @@ module "private_dns_resolver" {
   source                      = "Azure/avm-res-network-dnsresolver/azurerm"
   version                     = "0.9.0"
   enable_telemetry            = var.enable_telemetry
-  location                    = "Global"
+  location                    = var.location
   parent_id                   = module.resource_group.resource_id
   name                        = module.naming.dns_private_resolver.name
   virtual_network_resource_id = module.virtual_network.resource_id
