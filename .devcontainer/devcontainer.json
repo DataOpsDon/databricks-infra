@@ -1,0 +1,123 @@
+{
+  "name": "Baseline Infra Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+
+// See https://containers.dev/features for a list of available features
+    "features": {
+    "ghcr.io/devcontainers/features/azure-cli:1": {
+      "installBicep": true,
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/powershell:2": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.13",
+      "installTools": false
+    },
+    "ghcr.io/devcontainers/features/node:2": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/terraform:1": {
+    },
+    "ghcr.io/devcontainers-extra/features/checkov:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers-extra/features/infracost:1": {
+      "version": "latest"
+    },
+    "ghcr.io/rosstaco/devcontainer-features/microsoft-security-devops-cli:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/go:1": {}
+  },
+
+  // Lifecycle commands - chain apt operations to avoid lock conflicts
+  // Lifecycle: onCreateCommand runs first (system packages + uv), then postCreateCommand (tools), then postStartCommand (updates)
+  "onCreateCommand": "set -e; sudo rm -f /etc/apt/sources.list.d/yarn.list 2>/dev/null; sudo apt-get update; sudo apt-get install -y graphviz dos2unix; dos2unix .devcontainer/*.sh 2>/dev/null || true; curl -LsSf https://astral.sh/uv/install.sh | sh",
+  // CRs are stripped on the fly so the script still runs if it was checked out with
+  // CRLF endings (Windows core.autocrlf=true) - dos2unix can't always rewrite files on a Windows bind mount.
+  "postCreateCommand": "bash -c \"$(tr -d '\\r' < .devcontainer/post-create.sh)\"",
+
+  // Environment variables for Python optimization
+  "containerEnv": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONUNBUFFERED": "1",
+    "UV_CACHE_DIR": "/home/vscode/.cache/uv",
+    "TF_PLUGIN_CACHE_DIR": "/home/vscode/.terraform.d/plugin-cache"
+  },
+
+  // uv tool install (used for the Ignition CLI) installs into ~/.local/bin,
+  // which isn't on PATH by default in this base image
+  "remoteEnv": {
+    "PATH": "${containerEnv:HOME}/.local/bin:${containerEnv:PATH}",
+    // Pass GH_TOKEN from host → container. gh CLI uses it automatically, no `gh auth login` needed.
+    // Each user sets this once in VS Code User Settings (Ctrl+,):
+    //   "terminal.integrated.env.linux": { "GH_TOKEN": "ghp_yourTokenHere" }
+    // This is the ONLY supported method — shell exports (.bashrc/.profile) do NOT propagate reliably.
+    // Value is empty string if not set — gh CLI falls back to its normal auth flow.
+    "GH_TOKEN": "${localEnv:GH_TOKEN}"
+  },
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+      },
+      "extensions": [
+        "GitHub.copilot-chat",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-azureterraform",
+        "ms-azuretools.vscode-azureresourcegroups",
+        "ms-azuretools.vscode-bicep",
+        "ms-vscode.powershell",
+        "bierner.markdown-mermaid",
+        "bierner.markdown-preview-github-styles",
+        "davidanson.vscode-markdownlint",
+        "ms-vscode.copilot-mermaid-diagram",
+        "ms-vscode.azurecli",
+        "ms-azuretools.vscode-azurecontainerapps",
+        "ms-azuretools.vscode-azurestaticwebapps",
+        "ms-azuretools.azure-dev",
+        "ms-azuretools.vscode-containers",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "ms-kubernetes-tools.vscode-aks-tools",
+        "github.vscode-github-actions",
+        "github.vscode-pull-request-github",
+        "ms-azuretools.vscode-azure-mcp-server",
+        "EditorConfig.EditorConfig",
+        "hashicorp.terraform",
+        "Infracost.infracost",
+        "esbenp.prettier-vscode",
+        "redhat.vscode-yaml"
+      ]
+    }
+  },
+
+  // Mounts for credential/cache persistence across rebuilds
+  // - Azure CLI: Host's ~/.azure (Linux/macOS) or %USERPROFILE%\.azure (Windows)
+  // - GitHub CLI: Docker volume (Windows uses keyring, can't be mounted; Linux/macOS use files)
+  // - UV cache: Docker volume for Python package cache
+  "mounts": [
+    {
+      "source": "${localEnv:USERPROFILE}${localEnv:HOME}/.azure",
+      "target": "/home/vscode/.azure",
+      "type": "bind"
+    },
+    {
+      "source": "devcontainer-gh-config-${devcontainerId}",
+      "target": "/home/vscode/.config/gh",
+      "type": "volume"
+    },
+    {
+      "source": "devcontainer-uv-cache-${devcontainerId}",
+      "target": "/home/vscode/.cache/uv",
+      "type": "volume"
+    }
+  ],
+
+  "remoteUser": "vscode"
+}
