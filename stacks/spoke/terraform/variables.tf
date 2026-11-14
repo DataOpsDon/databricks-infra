@@ -65,6 +65,11 @@ variable "hub_private_dns_zone_databricks_id" {
   type        = string
 }
 
+variable "hub_private_dns_zone_dfs_id" {
+  description = "Resource ID of the hub privatelink.dfs.core.windows.net private DNS zone (hub output private_dns_zone_dfs_id)."
+  type        = string
+}
+
 variable "dns_servers" {
   description = "DNS servers for the spoke VNet, normally the hub private DNS resolver inbound IPs (hub output private_dns_resolver_inbound_ips). Empty uses Azure-provided DNS."
   type        = list(string)

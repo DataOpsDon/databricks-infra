@@ -5,8 +5,8 @@
 // Notes:
 // - Naming is centralised via the `naming` module to ensure consistent resource names across environments.
 // - Only Azure Verified Modules (AVM) are used: no `resource` blocks and no custom modules.
-// - The hub stack owns the privatelink.azuredatabricks.net zone and the private DNS resolver. This stack takes their
-//   IDs as variables (see variables.tf) instead of reading the hub state.
+// - The hub stack owns every private DNS zone (privatelink.azuredatabricks.net, privatelink.dfs.core.windows.net) and
+//   the private DNS resolver. This stack takes their IDs as variables (see variables.tf) instead of reading the hub state.
 
 // Module: naming
 // Purpose: Centralised naming standards for resources (project, environment, location short code).
@@ -102,32 +102,9 @@ module "virtual_network" {
   }
 }
 
-// Module: private_dns_zone_dfs
-// Purpose: privatelink.dfs.core.windows.net for the data lake dfs private endpoint. Linked to the spoke VNet and to the
-// hub VNet, so the hub private DNS resolver can answer for it when other networks use the resolver.
-module "private_dns_zone_dfs" {
-  source           = "Azure/avm-res-network-privatednszone/azurerm"
-  version          = "0.6.0"
-  enable_telemetry = var.enable_telemetry
-  parent_id        = module.resource_group.resource_id
-  domain_name      = "privatelink.dfs.core.windows.net"
-  tags             = var.tags
-
-  virtual_network_links = {
-    spoke = {
-      name               = "link-${module.naming.virtual_network.name}"
-      virtual_network_id = module.virtual_network.resource_id
-    }
-    hub = {
-      name               = "link-hub-${local.name_suffix}"
-      virtual_network_id = var.hub_virtual_network_id
-    }
-  }
-}
-
 // Module: data_lake
 // Purpose: Azure Data Lake Storage Gen2 account (hierarchical namespace) with public network access disabled.
-// It is reachable only through the dfs private endpoint, which registers in privatelink.dfs.core.windows.net.
+// It is reachable only through the dfs private endpoint, which registers in the hub-owned privatelink.dfs.core.windows.net zone.
 module "data_lake" {
   source                        = "Azure/avm-res-storage-storageaccount/azurerm"
   version                       = "0.11.0"
@@ -149,7 +126,7 @@ module "data_lake" {
       private_service_connection_name = "psc-dfs-${local.name_suffix}"
       subresource_name                = "dfs"
       subnet_resource_id              = module.virtual_network.subnets["private_endpoints"].resource_id
-      private_dns_zone_resource_ids   = [module.private_dns_zone_dfs.resource_id]
+      private_dns_zone_resource_ids   = [var.hub_private_dns_zone_dfs_id]
     }
   }
 }
@@ -192,4 +169,5 @@ module "databricks_workspace" {
       private_dns_zone_resource_ids   = [var.hub_private_dns_zone_databricks_id]
     }
   }
+  depends_on = [module.resource_group]
 }
