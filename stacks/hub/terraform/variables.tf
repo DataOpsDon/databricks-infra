@@ -43,3 +43,14 @@ variable "project" {
   default     = "my-project"
 }
 
+
+variable "vnet_address_space" {
+  description = "Address space of the hub virtual network. Must be a /22."
+  type        = string
+  default     = "10.10.0.0/22"
+
+  validation {
+    condition     = can(cidrhost(var.vnet_address_space, 0)) && tonumber(split("/", var.vnet_address_space)[1]) == 22
+    error_message = "vnet_address_space must be a valid CIDR range with a /22 prefix length."
+  }
+}
