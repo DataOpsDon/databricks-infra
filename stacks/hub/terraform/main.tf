@@ -51,7 +51,7 @@ module "virtual_network" {
   name             = module.naming.virtual_network.name
   address_space    = [var.vnet_address_space]
   tags             = var.tags
-  dns_servers      = [module.private_dns_resolver[inbound].inbound_endpoint_ips]
+  dns_servers      = ["10.10.0.132"]
   subnets = {
     databricks_host = {
       name             = local.subnet_names.databricks_host
