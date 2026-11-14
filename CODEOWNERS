@@ -1,0 +1,10 @@
+# Code owners - reviewers requested automatically on pull requests.
+# More: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# These teams are created by `ign bootstrap` (cicdPlatform: github, isFirstTimeDeployToGH: true)
+# using teamPrefix_gh (default: the repository name). The bootstrap ruleset requires a
+# code owner approval, so every path must have an owner with write access.
+*                     @dataopsdon/databricks-infra-lead-engineers @dataopsdon/databricks-infra-platform-admin
+/.github/              @dataopsdon/databricks-infra-platform-admin
+/bootstrap/           @dataopsdon/databricks-infra-platform-admin
+/CODEOWNERS           @dataopsdon/databricks-infra-platform-admin

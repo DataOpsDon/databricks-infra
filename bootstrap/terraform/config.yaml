@@ -1,0 +1,121 @@
+# Global Variables
+# CI/CD platform that will run Terraform for this environment:
+#   ado    - creates Azure DevOps service connections (needs adoOrgUrl + PAT)
+#   github - creates GitHub Actions OIDC federated credentials (needs orgName_gh + repositoryName_gh)
+cicdPlatform: "github"
+isFirstTimeDeployToADO: false # true / false RUN ONCE: Deploys ADO permissions / variable group / environments.
+environment: "dev"
+location: "uksouth"  # Example regions: eastus, westus, uksouth, swedencentral
+locationShort: "uks"  # Example short regions: eus, wus, uks, sdc
+app_short: "<Fill Me In>"  # Example app short: app1, app2, app3
+instance: "01"        # Resource instance number
+tags:
+  environment: "${environment}"
+  Creator: "${app_short}"
+  ReviewDate: "YY/MM"
+
+# State Variables
+subscriptionId_State: "<Fill Me In>"  # Subscription ID for TF State Storage
+tags_state:
+  Service: "TerraformState"
+
+# Customise the containers created for TF State for the Application/Workload being deployed
+containers_state:
+  Network:
+    name: "network"
+  Infra:
+    name: "infra"
+
+# Optional variables for state storage account
+stateStorageSku: Standard_ZRS  # Options: Standard_LRS, Standard_GRS, Standard_RAGRS, Standard_ZRS, Premium_LRS
+stateStoragePublic_network_access_enabled: true
+
+# UMI Variables
+subscriptionId_umi: "<Fill Me In>"  # Subscription ID for User Managed Identities for Deployment
+tags_umi:
+  Service: "Deployment MI"
+
+# Service Connection Variables
+subscriptionId_Application: "<Fill Me In>"  # Subscription ID for Application/Workload Deployment
+subscriptionName_Application: "<Fill Me In>"  # Subscription Name for Application/Workload Deployment
+
+# GitHub Variables (cicdPlatform: github)
+isFirstTimeDeployToGH: <Fill Me In> # true / false RUN ONCE per repository: repository guardrails (rulesets, Actions policy, security) and role teams
+ghCreateRepository: false  # true = create repositoryName_gh in orgName_gh; false = apply guardrails to an existing repository
+ghRepositoryVisibility: "private"  # private / internal (internal needs GitHub Enterprise Cloud)
+ghRepositoryDescription: "Terraform infrastructure for ${app_short}"
+preventSelfReviewDeploy_gh: true  # The person who triggered an apply cannot approve it
+deployApprovalRequired: true  # Required reviewers on the "<env>/apply" GitHub environment (and the ADO deploy service connection)
+canAdminsBypassDeploy_gh: false  # Allow repository admins to skip the apply approval
+deployWaitTimer_gh: 0  # Minutes to wait before an approved apply starts (0-43200)
+applyBranchPatterns_gh: ["main", "develop"]  # Branches allowed to use the "<env>/apply" environment (and so the deploy identity). e.g. ["main"] for prd
+defaultStateContainer_gh: "infra"  # Value of TF_STATE_CONTAINER; stack workflows can override it with the state_container input
+approvers_gh: []  # GitHub usernames in the deploy approvers team for this environment
+teamPrefix_gh: "${repositoryName_gh}"  # Role team names are "<prefix>-platform-admin", "<prefix>-engineers", ... (team names are organisation-wide)
+teamMembers_gh:  # GitHub usernames per role team. Leave empty to manage membership in GitHub / IdP team sync
+  platformAdmin: []
+  leadEngineer: []
+  engineer: []
+  pm: []
+  leadTester: []
+  tester: []
+
+# GitHub Guardrails (applied when isFirstTimeDeployToGH is true)
+enableRulesets_gh: true  # Branch ruleset on protectedBranches_gh (needs GitHub Team/Enterprise for private repos)
+protectedBranches_gh: ["~DEFAULT_BRANCH", "refs/heads/develop"]
+requiredApprovals_gh: 1  # Approving reviews required before merge
+requireCodeOwnerReview_gh: true  # Needs a CODEOWNERS file (created by ign init)
+requireLastPushApproval_gh: true  # The last push must be approved by someone else
+requiredStatusChecks_gh: []  # e.g. ["dev / Terraform-CI"]. Add once the workflow has run at least once
+requireSignedCommits_gh: false
+requireLinearHistory_gh: false
+allowedMergeMethods_gh: ["merge", "squash"]  # merge / squash / rebase
+manageActionsPermissions_gh: true  # Restrict Actions to GitHub-owned, organisation-owned and allowedActionPatterns_gh; GITHUB_TOKEN read-only
+allowedActionPatterns_gh: ["azure/login@*", "bridgecrewio/checkov-action@*"]  # Third-party actions used by the shared pipeline
+shaPinningRequired_gh: false  # Require all actions and reusable workflows to be pinned to a full commit SHA
+enableVulnerabilityAlerts_gh: true  # Dependabot alerts + security updates
+enableSecretScanning_gh: false  # Secret scanning + push protection on repository creation (private repos need GitHub Secret Protection)
+
+# Shared CI/CD repository (reusable workflow + composite actions used by every stack workflow)
+cicdRepoName_gh: "terraform-azure-cicd-bricks"  # Repository name in orgName_gh
+createCicdRepo_gh: true  # First run: create and populate the repo if it does not exist yet (left untouched if it does)
+cicdRepoVisibility_gh: "private"  # private / internal; organisation repositories are granted access either way
+cicdRepoMaintainers_gh: []  # GitHub usernames in the "<cicdRepoName_gh>-maintainers" team (code owners of the CI/CD repo)
+manageCicdRepoAccess_gh: false  # Existing CI/CD repo only: allow organisation repositories to use its workflows (needs admin on that repo)
+
+# ADO Variables
+preventSelfReviewDeploy_ado: false
+
+# Resource Naming Templates (customizable structure using template placeholders)
+rgName_state: "rg-tfstate-${app_short}-${environment}-${locationShort}-${instance}"
+saName_state: "sttfstate${app_short}${environment}${locationShort}"
+rgName_umi: "rg-umi-${app_short}-${environment}-${locationShort}-${instance}"
+umiName_build: "umi-tfbuild-${app_short}-${environment}-${locationShort}"
+umiName_deploy: "umi-tfdeploy-${app_short}-${environment}-${locationShort}"
+serviceConnectionName_Build: "sc-build-${app_short}-${environment}-${locationShort}-${instance}"
+serviceConnectionName_Deploy: "sc-deploy-${app_short}-${environment}-${locationShort}-${instance}"
+scDescription: "Service connection for either build or deploy using OIDC federated credentials."
+repositoryName_gh: "databricks-infra"  # GitHub repository name (without the org) that runs the Terraform workflows
+teamName_gh: "approvers-${environment}-${app_short}-tf-${repositoryName_gh}"
+environmentName_gh: "${environment}"  # GitHub environment used by plan; apply uses "<name>/apply". Must match the workflow `environment` input
+oidcSubjectFormat_gh: "immutable"  # immutable = repo:<org>@<orgId>/<repo>@<repoId>:environment:<env> (default for repos created after 15 Jul 2026, or opted in); legacy = repo:<org>/<repo>:environment:<env>
+
+# Optional variables (may be used by other modules/configurations)
+adoCreateProject: false
+adoOrgUrl: null #"https://dev.azure.com/#####"  # The Azure DevOps organization URL "https://dev.azure.com/<your org name>/"
+# Always pass the project name
+adoProjectName: null  # The Name of your Azure DevOps project
+adoProjectDescription: null #The description of the ADO project to be created. If adoCreateProject is false, this variable is ignored and the existing project will be used.
+orgName_gh: "dataopsdon"  # The name of the GitHub organization containing the repository
+
+
+## DO NOT FILL OUT, PROMPTED FOR AT RUN TIME
+ghPAT: null  # The GitHub personal access token
+adoPAT: null  # The Azure DevOps personal access token
+
+createLeadEngineerGroup: true # Set to true to create the Lead Engineer group in your Azure DevOps project
+createPMGroup: true # Set to true to create the Project Manager group in your Azure DevOps project
+createEngineerGroup: true # Set to true to create the Engineer group in your Azure DevOps project
+createLeadTesterGroup: true # Set to true to create the Lead Tester group in your Azure DevOps project
+createTesterGroup: true # Set to true to create the Tester group in your Azure DevOps project
+createPlatformAdminGroup: true # Set to true to create the Platform Admin group in your Azure DevOps project

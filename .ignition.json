@@ -1,0 +1,8 @@
+{
+  "cloud": "azure",
+  "cicd": "github",
+  "github_org": "dataopsdon",
+  "github_repo": "databricks-infra",
+  "cicd_repo": "terraform-azure-cicd-bricks",
+  "cicd_ref": "main"
+}
