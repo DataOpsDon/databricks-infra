@@ -85,6 +85,10 @@ module "virtual_network" {
       name             = local.subnet_names.private_endpoints
       address_prefixes = [local.subnet_prefixes.private_endpoints]
     }
+    bastion = {
+      name             = local.subnet_names.bastion
+      address_prefixes = [local.subnet_prefixes.bastion]
+    }
     jumpbox = {
       name             = local.subnet_names.jumpbox
       address_prefixes = [local.subnet_prefixes.jumpbox]
@@ -213,17 +217,25 @@ module "databricks_workspace" {
 }
 
 // Module: bastion
-// Purpose: Azure Bastion, Developer SKU (free, shared pool, no public IP and no AzureBastionSubnet). The Developer SKU
-// only reaches VMs in this same VNet (no peering support), which is why the jump box subnet lives here.
+// Purpose: Azure Bastion, Standard SKU, in the dedicated AzureBastionSubnet with its own public IP. Standard reaches VMs
+// in this VNet and in peered VNets (spoke, shared), and supports IP-based connections and native client tunnelling.
 module "bastion" {
-  source             = "Azure/avm-res-network-bastionhost/azurerm"
-  version            = "0.9.0"
-  enable_telemetry   = var.enable_telemetry
-  location           = var.location
-  parent_id          = module.resource_group.resource_id
-  name               = module.naming.bastion_host.name
-  sku                = "Developer"
-  virtual_network_id = module.virtual_network.resource_id
-  zones              = []
-  tags               = var.tags
+  source           = "Azure/avm-res-network-bastionhost/azurerm"
+  version          = "0.9.0"
+  enable_telemetry = var.enable_telemetry
+  location         = var.location
+  parent_id        = module.resource_group.resource_id
+  name             = module.naming.bastion_host.name
+  sku              = "Standard"
+  tags             = var.tags
+
+  ip_configuration = {
+    name                   = "ipconfig1"
+    subnet_id              = module.virtual_network.subnets["bastion"].resource_id
+    create_public_ip       = true
+    public_ip_address_name = "${module.naming.public_ip.slug}-bastion-${local.name_suffix}"
+  }
+
+  ip_connect_enabled = true
+  tunneling_enabled  = true
 }

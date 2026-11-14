@@ -24,9 +24,9 @@
 .EXAMPLE
     ./scripts/setup-github-oidc.ps1 `
         -GitHubOrg my-org -GitHubRepo my-infra-repo -Environment dev `
-        -SubscriptionId 00000000-0000-0000-0000-000000000000 `
+        -SubscriptionId 1e1f62ac-0120-4c72-b6a7-87eb14060fb9 `
         -IdentityResourceGroup rg-umi-myapp-dev-uks-01 -Location uksouth `
-        -StateSubscriptionId 00000000-0000-0000-0000-000000000000 `
+        -StateSubscriptionId 1e1f62ac-0120-4c72-b6a7-87eb14060fb9 `
         -StateResourceGroup rg-tfstate-myapp-dev-uks-01 `
         -StateStorageAccount sttfstatemyappdevuks -StateContainer infra
 #>
