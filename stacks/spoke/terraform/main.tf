@@ -105,8 +105,8 @@ module "virtual_network" {
 }
 
 // Module: data_lake
-// Purpose: Azure Data Lake Storage Gen2 account (hierarchical namespace) with public network access disabled.
-// It is reachable only through the dfs private endpoint, which registers in the hub-owned privatelink.dfs.core.windows.net zone.
+// Purpose: Azure Data Lake Storage Gen2 account (hierarchical namespace) with public network access enabled, and a dfs
+// private endpoint for private access, which registers in the hub-owned privatelink.dfs.core.windows.net zone.
 module "data_lake" {
   source                        = "Azure/avm-res-storage-storageaccount/azurerm"
   version                       = "0.11.0"
@@ -118,9 +118,14 @@ module "data_lake" {
   account_tier                  = "Standard"
   account_replication_type      = var.data_lake_replication_type
   is_hns_enabled                = true
-  public_network_access_enabled = false
+  public_network_access_enabled = true
   shared_access_key_enabled     = false
-  tags                          = var.tags
+
+  # Public access stays on next to the dfs private endpoint: no firewall deny rule.
+  network_rules = {
+    default_action = "Allow"
+  }
+  tags = var.tags
 
   private_endpoints = {
     dfs = {
@@ -135,7 +140,7 @@ module "data_lake" {
 
 // Module: databricks_workspace
 // Purpose: Premium Databricks workspace injected into the spoke VNet (secure cluster connectivity, no public IPs),
-// with public network access disabled. It is reachable only through the databricks_ui_api private endpoint
+// with public network access enabled, and the databricks_ui_api private endpoint for private access
 // (workspace UI/API and cluster-to-control-plane), registered in the hub-owned privatelink.azuredatabricks.net zone.
 // Browser authentication already has a private endpoint in the hub, so it is not repeated here.
 module "databricks_workspace" {
@@ -159,8 +164,9 @@ module "databricks_workspace" {
     private_subnet_network_security_group_association_id = module.virtual_network.subnets["databricks_container"].resource_id
   }
 
-  public_network_access_enabled         = false
-  network_security_group_rules_required = "NoAzureDatabricksRules"
+  # Public access stays on next to the private endpoints. With public access enabled, Databricks manages its own NSG rules.
+  public_network_access_enabled         = true
+  network_security_group_rules_required = "AllRules"
 
   private_endpoints = {
     databricks_ui_api = {
