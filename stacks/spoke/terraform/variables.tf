@@ -70,6 +70,11 @@ variable "hub_private_dns_zone_dfs_id" {
   type        = string
 }
 
+variable "hub_private_dns_zone_blob_id" {
+  description = "Resource ID of the hub privatelink.blob.core.windows.net private DNS zone (hub output private_dns_zone_blob_id)."
+  type        = string
+}
+
 variable "dns_servers" {
   description = "DNS servers for the spoke VNet, normally the hub private DNS resolver inbound IPs (hub output private_dns_resolver_inbound_ips). Empty uses Azure-provided DNS."
   type        = list(string)
@@ -80,4 +85,10 @@ variable "data_lake_replication_type" {
   description = "Replication type of the data lake storage account (LRS, ZRS, GRS, ...)."
   type        = string
   default     = "ZRS"
+}
+
+variable "csv_storage_replication_type" {
+  description = "Replication type of the CSV storage account (LRS, ZRS, GRS, ...)."
+  type        = string
+  default     = "LRS"
 }

@@ -104,6 +104,23 @@ module "virtual_network" {
   }
 }
 
+// Module: access_connector
+// Purpose: Databricks access connector with a system-assigned managed identity, used by Unity Catalog to reach the
+// data lake. The identity gets Storage Blob Data Contributor on the data lake (see module.data_lake).
+module "access_connector" {
+  source           = "Azure/avm-res-databricks-accessconnector/azurerm"
+  version          = "0.3.0"
+  enable_telemetry = var.enable_telemetry
+  location         = var.location
+  parent_id        = module.resource_group.resource_id
+  name             = "dbac-${local.name_suffix}"
+  tags             = var.tags
+
+  managed_identities = {
+    system_assigned = true
+  }
+}
+
 // Module: data_lake
 // Purpose: Azure Data Lake Storage Gen2 account (hierarchical namespace) with public network access enabled, and a dfs
 // private endpoint for private access, which registers in the hub-owned privatelink.dfs.core.windows.net zone.
@@ -134,6 +151,54 @@ module "data_lake" {
       subresource_name                = "dfs"
       subnet_resource_id              = module.virtual_network.subnets["private_endpoints"].resource_id
       private_dns_zone_resource_ids   = [var.hub_private_dns_zone_dfs_id]
+    }
+  }
+}
+
+// Module: naming_csv
+// Purpose: Second naming instance so the CSV storage account gets its own name and unique suffix.
+module "naming_csv" {
+  source  = "Azure/naming/azurerm"
+  version = "0.4.4"
+
+  suffix = [var.project, "csv", var.environment, var.location_short]
+}
+
+// Module: csv_storage
+// Purpose: Separate storage account used only to host CSV files (no hierarchical namespace). Public network access is
+// enabled, and a blob private endpoint gives private access through the hub-owned privatelink.blob.core.windows.net zone.
+module "csv_storage" {
+  source                        = "Azure/avm-res-storage-storageaccount/azurerm"
+  version                       = "0.11.0"
+  enable_telemetry              = var.enable_telemetry
+  location                      = var.location
+  parent_id                     = module.resource_group.resource_id
+  name                          = module.naming_csv.storage_account.name_unique
+  account_kind                  = "StorageV2"
+  account_tier                  = "Standard"
+  account_replication_type      = var.csv_storage_replication_type
+  is_hns_enabled                = false
+  public_network_access_enabled = true
+  shared_access_key_enabled     = false
+  tags                          = var.tags
+
+  network_rules = {
+    default_action = "Allow"
+  }
+
+  containers = {
+    csv = {
+      name = "csv"
+    }
+  }
+
+  private_endpoints = {
+    blob = {
+      name                            = "${module.naming.private_endpoint.slug}-csv-blob-${local.name_suffix}"
+      private_service_connection_name = "psc-csv-blob-${local.name_suffix}"
+      subresource_name                = "blob"
+      subnet_resource_id              = module.virtual_network.subnets["private_endpoints"].resource_id
+      private_dns_zone_resource_ids   = [var.hub_private_dns_zone_blob_id]
     }
   }
 }

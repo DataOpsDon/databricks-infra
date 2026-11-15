@@ -171,6 +171,33 @@ module "private_dns_zone_dfs" {
   )
 }
 
+// Module: private_dns_zone_blob
+// Purpose: privatelink.blob.core.windows.net for blob private endpoints (deployed by the spoke stack).
+// Linked to the hub VNet, plus any spoke VNets listed in var.spoke_virtual_network_ids.
+module "private_dns_zone_blob" {
+  source           = "Azure/avm-res-network-privatednszone/azurerm"
+  version          = "0.6.0"
+  enable_telemetry = false
+  parent_id        = module.resource_group.resource_id
+  domain_name      = "privatelink.blob.core.windows.net"
+  tags             = var.tags
+
+  virtual_network_links = merge(
+    {
+      hub = {
+        name               = "link-${module.naming.virtual_network.name}"
+        virtual_network_id = module.virtual_network.resource_id
+      }
+    },
+    {
+      for k, id in var.spoke_virtual_network_ids : k => {
+        name               = "link-${k}-${local.name_suffix}"
+        virtual_network_id = id
+      }
+    }
+  )
+}
+
 // Module: databricks_workspace
 // Purpose: Premium Databricks workspace injected into the hub VNet (secure cluster connectivity, no public IPs),
 // with public network access enabled, and private endpoints for private access:
