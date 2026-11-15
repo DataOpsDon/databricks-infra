@@ -42,6 +42,11 @@ output "private_dns_zone_dfs_id" {
   value       = module.private_dns_zone_dfs.resource_id
 }
 
+output "private_dns_zone_blob_id" {
+  description = "The ID of the privatelink.blob.core.windows.net private DNS zone"
+  value       = module.private_dns_zone_blob.resource_id
+}
+
 output "databricks_workspace_id" {
   description = "The Azure resource ID of the Databricks workspace"
   value       = module.databricks_workspace.resource_id
