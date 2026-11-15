@@ -1,0 +1,36 @@
+{
+  "changes": [
+    {
+      "principal": "edp-tst-admins",
+      "add": [
+        "MANAGE"
+      ]
+    },
+    {
+      "principal": "edp-tst-developers",
+      "add": [
+        "USE_CATALOG",
+        "USE_SCHEMA",
+        "SELECT",
+        "BROWSE",
+        "READ_VOLUME",
+        "MODIFY",
+        "EXECUTE",
+        "APPLY_TAG"
+      ]
+    },
+    {
+      "principal": "edp-tst-admins",
+      "add": [
+        "USE_CATALOG",
+        "USE_SCHEMA",
+        "SELECT",
+        "BROWSE",
+        "READ_VOLUME",
+        "MODIFY",
+        "EXECUTE",
+        "APPLY_TAG"
+      ]
+    }
+  ]
+}

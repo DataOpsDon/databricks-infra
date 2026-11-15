@@ -1,0 +1,8 @@
+{
+    "catalogs": {
+        "edp-uat-resources": "unity-catalog",
+        "edp-uat-bronze": "bronze",
+        "edp-uat-silver": "silver",
+        "edp-uat-gold": "gold"
+    }
+}

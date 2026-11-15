@@ -1,0 +1,7 @@
+{
+    "groups": [
+        "edp-tst-admins",
+        "edp-tst-developers"
+    ],
+    "owner": "spn-iac-dataplatform-tst"
+}

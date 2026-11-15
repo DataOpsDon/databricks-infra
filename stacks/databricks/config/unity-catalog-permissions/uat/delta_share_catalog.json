@@ -1,0 +1,36 @@
+{
+  "changes": [
+    {
+      "principal": "edp-uat-admins",
+      "add": [
+        "MANAGE"
+      ]
+    },
+    {
+      "principal": "edp-uat-developers",
+      "add": [
+        "USE_CATALOG",
+        "USE_SCHEMA",
+        "SELECT",
+        "BROWSE",
+        "READ_VOLUME",
+        "MODIFY",
+        "EXECUTE",
+        "APPLY_TAG"
+      ]
+    },
+    {
+      "principal": "edp-uat-admins",
+      "add": [
+        "USE_CATALOG",
+        "USE_SCHEMA",
+        "SELECT",
+        "BROWSE",
+        "READ_VOLUME",
+        "MODIFY",
+        "EXECUTE",
+        "APPLY_TAG"
+      ]
+    }
+  ]
+}

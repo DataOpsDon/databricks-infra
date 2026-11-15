@@ -1,0 +1,13 @@
+{
+  "changes": [
+    {
+      "principal": "AAD-RBAC-SUB-Applications-DataPlatform-GLOBAL-metastoreadmins",
+      "add": [
+        "CREATE_CATALOG",
+        "CREATE_EXTERNAL_LOCATION",
+        "CREATE_STORAGE_CREDENTIAL",
+        "MANAGE_ALLOWLIST"
+      ]
+    }
+  ]
+}

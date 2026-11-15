@@ -1,0 +1,36 @@
+{
+  "changes": [
+    {
+      "principal": "edp-prd-admins",
+      "add": [
+        "MANAGE"
+      ]
+    },
+    {
+      "principal": "edp-prd-developers",
+      "add": [
+        "USE_CATALOG",
+        "USE_SCHEMA",
+        "SELECT",
+        "BROWSE",
+        "READ_VOLUME",
+        "MODIFY",
+        "EXECUTE",
+        "APPLY_TAG"
+      ]
+    },
+    {
+      "principal": "edp-prd-admins",
+      "add": [
+        "USE_CATALOG",
+        "USE_SCHEMA",
+        "SELECT",
+        "BROWSE",
+        "READ_VOLUME",
+        "MODIFY",
+        "EXECUTE",
+        "APPLY_TAG"
+      ]
+    }
+  ]
+}

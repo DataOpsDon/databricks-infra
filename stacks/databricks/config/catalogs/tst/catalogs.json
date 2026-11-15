@@ -1,0 +1,8 @@
+{
+    "catalogs": {
+        "edp-tst-resources": "unity-catalog",
+        "edp-tst-bronze": "bronze",
+        "edp-tst-silver": "silver",
+        "edp-tst-gold": "gold"
+    }
+}

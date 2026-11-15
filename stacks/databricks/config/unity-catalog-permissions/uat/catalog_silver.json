@@ -1,0 +1,50 @@
+{
+  "changes": [
+    {
+      "principal": "edp-uat-admins",
+      "add": [
+        "CREATE_VOLUME",
+        "WRITE_VOLUME",
+        "MANAGE"
+      ]
+    },
+    {
+      "principal": "edp-uat-developers",
+      "add": [
+        "USE_CATALOG",
+        "USE_SCHEMA",
+        "CREATE_SCHEMA",
+        "CREATE_TABLE",
+        "CREATE_MODEL",
+        "CREATE_MATERIALIZED_VIEW",
+        "CREATE_FUNCTION",
+        "SELECT",
+        "BROWSE",
+        "REFRESH",
+        "READ_VOLUME",
+        "MODIFY",
+        "EXECUTE",
+        "APPLY_TAG"
+      ]
+    },
+    {
+      "principal": "edp-uat-admins",
+      "add": [
+        "USE_CATALOG",
+        "USE_SCHEMA",
+        "CREATE_SCHEMA",
+        "CREATE_TABLE",
+        "CREATE_MODEL",
+        "CREATE_MATERIALIZED_VIEW",
+        "CREATE_FUNCTION",
+        "SELECT",
+        "BROWSE",
+        "REFRESH",
+        "READ_VOLUME",
+        "MODIFY",
+        "EXECUTE",
+        "APPLY_TAG"
+      ]
+    }
+  ]
+}
