@@ -144,6 +144,23 @@ module "data_lake" {
   }
   tags = var.tags
 
+  # Medallion layers
+  containers = {
+    for layer in ["bronze", "silver", "gold"] : layer => {
+      name = layer
+    }
+  }
+
+  # The Databricks access connector (Unity Catalog storage credential) reads and writes the lake
+  role_assignments = {
+    access_connector_blob_contributor = {
+      role_definition_id_or_name = "Storage Blob Data Contributor"
+      principal_id               = module.access_connector.system_assigned_mi_principal_id
+      principal_type             = "ServicePrincipal"
+      description                = "Databricks access connector: Unity Catalog access to the data lake"
+    }
+  }
+
   private_endpoints = {
     dfs = {
       name                            = "${module.naming.private_endpoint.slug}-dfs-${local.name_suffix}"
