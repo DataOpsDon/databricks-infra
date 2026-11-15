@@ -173,7 +173,7 @@ module "private_dns_zone_dfs" {
 
 // Module: databricks_workspace
 // Purpose: Premium Databricks workspace injected into the hub VNet (secure cluster connectivity, no public IPs),
-// with public network access disabled. It is reachable only through its private endpoints:
+// with public network access enabled, and private endpoints for private access:
 //   - databricks_ui_api:          workspace UI/API (front end) and cluster-to-control-plane (back end)
 //   - browser_authentication:     SSO browser login callback for the region
 // Both endpoints register in the privatelink.azuredatabricks.net private DNS zone.
@@ -198,8 +198,9 @@ module "databricks_workspace" {
     private_subnet_network_security_group_association_id = module.virtual_network.subnets["databricks_container"].resource_id
   }
 
-  public_network_access_enabled         = false
-  network_security_group_rules_required = "NoAzureDatabricksRules"
+  # Public access stays on next to the private endpoints. With public access enabled, Databricks manages its own NSG rules.
+  public_network_access_enabled         = true
+  network_security_group_rules_required = "AllRules"
 
   private_endpoints = {
     browser_authentication = {
