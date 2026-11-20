@@ -1,9 +1,9 @@
 //Set the required version of AzureRM to be used.
 terraform {
   required_providers {
-    databricks_account = {
-      source  = "databricks_account/databricks_account"
-      version = "1.142.0"
+    databricks = {
+      source  = "databricks/databricks"
+      version = "1.144.0"
 
     }
     azurerm = {
