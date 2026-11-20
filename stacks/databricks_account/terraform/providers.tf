@@ -1,8 +1,8 @@
 //Set the required version of AzureRM to be used.
 terraform {
   required_providers {
-    databricks = {
-      source  = "databricks/databricks"
+    databricks_account = {
+      source  = "databricks_account/databricks_account"
       version = "1.142.0"
 
     }
@@ -15,15 +15,10 @@ terraform {
   }
 }
 
-provider "databricks" {
+provider "databricks_account" {
   alias           = "accounts"
   host            = "https://accounts.azuredatabricks.net"
   account_id      = "125b4776-edfd-4438-b5d8-8f6f8691d6f7"
-}
-
-provider "databricks" {
-  alias = "workspace"
-  host  = data.terraform_remote_state.dlz.outputs.databricks_workspace_url
 }
 
 provider "azurerm" {

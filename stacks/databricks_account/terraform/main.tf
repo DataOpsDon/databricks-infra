@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------------------------------------------------
-// DATABRICKS Stack - deployment into databricks and uc
-// This Terraform configuration provisions resources for the databricks deployment.
+// DATABRICKS Stack - deployment into databricks_account and uc
+// This Terraform configuration provisions resources for the databricks_account deployment.
 //
 // Notes:
 // - Naming is centralised via the `naming` module to ensure consistent resource names across environments.
@@ -17,7 +17,7 @@ module "naming" {
 }
 
 // Module: resource_group
-// Purpose: Creates the databricks resource group to contain all resources in this stack.
+// Purpose: Creates the databricks_account resource group to contain all resources in this stack.
 module "resource_group" {
   source           = "Azure/avm-res-resources-resourcegroup/azurerm"
   version          = "0.2.1"

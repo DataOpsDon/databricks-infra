@@ -13,10 +13,10 @@
   "data_security_mode": "USER_ISOLATION",
   "runtime_engine": "STANDARD",
   "spark_env_vars": {
-    "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+    "PYSPARK_PYTHON": "/databricks_account/python3/bin/python3"
   },
   "spark_conf": {
-    "spark.databricks.delta.preview.enabled": "true",
-    "spark.databricks.sql.initial.catalog.name": ""
+    "spark.databricks_account.delta.preview.enabled": "true",
+    "spark.databricks_account.sql.initial.catalog.name": ""
   }
 }

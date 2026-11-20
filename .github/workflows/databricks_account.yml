@@ -1,6 +1,6 @@
-name: databricks
+name: databricks_account
 
-# Caller workflow for the `databricks` stack.
+# Caller workflow for the `databricks_account` stack.
 # All pipeline logic lives in the shared CI/CD repo (dataopsdon/terraform-azure-cicd-bricks);
 # this file only decides WHICH environment runs for WHICH branch/event.
 #
@@ -10,7 +10,7 @@ name: databricks
 #
 # Azure identity + Terraform state settings are read from GitHub environment
 # variables (AZURE_* / TF_STATE_*) on the `dev`, `dev/apply`, `prd` and
-# `prd/apply` environments - see stacks/databricks/CONFIGURATION.md.
+# `prd/apply` environments - see stacks/databricks_account/CONFIGURATION.md.
 # To add tst/uat, copy a job below and change `environment` and its `if:`.
 
 on:
@@ -20,15 +20,15 @@ on:
       - develop
       - 'feature/**'
     paths:
-      - 'stacks/databricks/**'
-      - '.github/workflows/databricks.yml'
+      - 'stacks/databricks_account/**'
+      - '.github/workflows/databricks_account.yml'
   pull_request:
     branches:
       - main
       - develop
     paths:
-      - 'stacks/databricks/**'
-      - '.github/workflows/databricks.yml'
+      - 'stacks/databricks_account/**'
+      - '.github/workflows/databricks_account.yml'
   workflow_dispatch:
 
 permissions:
@@ -44,7 +44,7 @@ jobs:
     # Pinned to a release of the shared CI/CD repo - bump deliberately.
     uses: dataopsdon/terraform-azure-cicd-bricks/.github/workflows/_terraform-pipeline.yml@main
     with:
-      working_directory: stacks/databricks/terraform
+      working_directory: stacks/databricks_account/terraform
       environment: dev
     secrets:
       module_repo_pat: ${{ secrets.MODULE_REPO_PAT }}
@@ -59,7 +59,7 @@ jobs:
     if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name != 'pull_request' && github.ref == 'refs/heads/main')
     uses: dataopsdon/terraform-azure-cicd-bricks/.github/workflows/_terraform-pipeline.yml@main
     with:
-      working_directory: stacks/databricks/terraform
+      working_directory: stacks/databricks_account/terraform
       environment: prd
     secrets:
       module_repo_pat: ${{ secrets.MODULE_REPO_PAT }}

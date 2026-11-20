@@ -1,4 +1,4 @@
-# Configuration Guide - databricks
+# Configuration Guide - databricks_account
 
 This document lists all files that need to be updated with your specific configuration values before deploying this stack.
 
@@ -6,7 +6,7 @@ This document lists all files that need to be updated with your specific configu
 
 Before deploying this stack, you must update the following files with your Azure subscription IDs and other configuration values:
 
-### 1. GitHub Actions (`.github/workflows/databricks.yml`)
+### 1. GitHub Actions (`.github/workflows/databricks_account.yml`)
 
 The workflow calls the shared reusable pipeline `dataopsdon/terraform-azure-cicd-bricks` pinned to `main`. Pin it to a release tag (or full commit SHA) before going live.
 
@@ -27,7 +27,7 @@ Variables required on every environment:
 - **`TF_STATE_STORAGE_ACCOUNT`**: state storage account name
 - **`TF_STATE_CONTAINER`**: state blob container
 
-The state blob key defaults to `stacks/databricks/terraform/<environment>.tfstate`.
+The state blob key defaults to `stacks/databricks_account/terraform/<environment>.tfstate`.
 
 `ign bootstrap --apply` writes `bootstrap/BOOTSTRAP-OUTPUTS-<env>.md` containing the exact `gh variable set` commands. Without bootstrap, use `scripts/setup-github-oidc.ps1`.
 
@@ -74,7 +74,7 @@ environment                = "dev"
 
 You may also need to update:
 
-- **Workflow**: Review `.github/workflows/databricks.yml` - branch triggers, environments (add `tst`/`uat` jobs if needed) and the pinned CI/CD ref
+- **Workflow**: Review `.github/workflows/databricks_account.yml` - branch triggers, environments (add `tst`/`uat` jobs if needed) and the pinned CI/CD ref
 - **Resource Names**: Review and customize resource names in `terraform/main.tf` if needed
 - **Variables**: Review `terraform/variables.tf` for any additional variables that need values
 
