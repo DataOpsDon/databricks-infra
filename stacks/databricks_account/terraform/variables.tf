@@ -55,3 +55,28 @@ variable "workspace_ids" {
   type        = map(string)
   default     = {}
 }
+
+variable "tf_state_resource_group_name" {
+  description = "Resource group of the storage account holding the Terraform state (shared by all stacks)."
+  type        = string
+}
+
+variable "tf_state_storage_account_name" {
+  description = "Name of the storage account holding the Terraform state (shared by all stacks)."
+  type        = string
+}
+
+variable "tf_state_container_name" {
+  description = "Blob container holding the Terraform state (shared by all stacks)."
+  type        = string
+}
+
+variable "hub_state_key" {
+  description = "State blob key of the hub stack."
+  type        = string
+}
+
+variable "spoke_state_key" {
+  description = "State blob key of the spoke stack."
+  type        = string
+}
