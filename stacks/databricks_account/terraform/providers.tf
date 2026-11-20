@@ -7,7 +7,7 @@ terraform {
 
     }
     azurerm = {
-      source  = "hashicorp/azurerm"
+      source = "hashicorp/azurerm"
     }
   }
   backend "azurerm" {
@@ -16,9 +16,9 @@ terraform {
 }
 
 provider "databricks" {
-  alias           = "accounts"
-  host            = "https://accounts.azuredatabricks.net"
-  account_id      = "e1530838-69ea-465a-b7f6-1783147c36e4"
+  alias      = "accounts"
+  host       = "https://accounts.azuredatabricks.net"
+  account_id = "e1530838-69ea-465a-b7f6-1783147c36e4"
 }
 
 provider "azurerm" {
