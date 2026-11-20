@@ -15,7 +15,7 @@ terraform {
   }
 }
 
-provider "databricks_account" {
+provider "databricks" {
   alias           = "accounts"
   host            = "https://accounts.azuredatabricks.net"
   account_id      = "e1530838-69ea-465a-b7f6-1783147c36e4"
