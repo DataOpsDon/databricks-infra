@@ -10,7 +10,7 @@ locals {
 }
 
 resource "databricks_metastore" "main" {
-  name          = "metastore_${var.region}"
+  name          = coalesce(var.name, "metastore_${var.region}")
   storage_root  = var.storage_root
   owner         = local.owner
   region        = var.region

@@ -7,23 +7,28 @@
 
 // Module: naming
 // Purpose: Centralised naming standards for resources (location, project, environment, LZ short code).
-module "naming" {
-  source   = "../../../templates/utils"
-  location = var.location
-  project  = var.project
-  lz       = "<FILL ME IN>"
-  suffix   = var.environment
-  lz_short = "<FILL ME IN>"
+
+
+// Module: metastore
+// Purpose: Creates the Unity Catalog metastore for the region. Owner comes from the global metastore config JSON.
+module "metastore" {
+  source         = "../../../templates/modules/uc_metastore"
+  name           = var.metastore_name
+  region         = var.location
+  json_file_path = lower("../config/unity-catalog-permissions/global/metastore.json")
+  providers = {
+    databricks = databricks.accounts
+  }
 }
 
-// Module: resource_group
-// Purpose: Creates the databricks_account resource group to contain all resources in this stack.
-module "resource_group" {
-  source           = "Azure/avm-res-resources-resourcegroup/azurerm"
-  version          = "0.2.1"
-  enable_telemetry = var.enable_telemetry
-  location         = var.location
-  name             = "${module.naming.name.resource_group}-databricks"
-  tags             = var.tags
+// Module: metastore_assignment
+// Purpose: Assigns the metastore to each workspace (keyed by a friendly name, value is the numeric Databricks workspace ID).
+module "metastore_assignment" {
+  source       = "../../../templates/modules/uc_metastore_assigment"
+  for_each     = var.workspace_ids
+  metastore_id = module.metastore.id
+  workspace_id = each.value
+  providers = {
+    databricks = databricks.accounts
+  }
 }
-

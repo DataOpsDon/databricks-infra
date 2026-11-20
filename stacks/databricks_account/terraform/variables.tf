@@ -43,3 +43,15 @@ variable "project" {
   default     = "my-project"
 }
 
+
+variable "metastore_name" {
+  description = "The name of the Unity Catalog metastore."
+  type        = string
+  default     = "metastore-uks"
+}
+
+variable "workspace_ids" {
+  description = "Map of workspace name to numeric Databricks workspace ID (not the Azure resource ID) to assign the metastore to."
+  type        = map(string)
+  default     = {}
+}

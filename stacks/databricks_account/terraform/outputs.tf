@@ -1,10 +1,9 @@
-output "resource_group_name" {
-  description = "The name of the resource group"
-  value       = module.resource_group.name
+output "metastore_id" {
+  description = "The ID of the Unity Catalog metastore"
+  value       = module.metastore.id
 }
 
-output "resource_group_id" {
-  description = "The ID of the resource group"
-  value       = module.resource_group.resource_id
+output "metastore_owner" {
+  description = "The owner of the Unity Catalog metastore"
+  value       = module.metastore.metastore_owner
 }
-

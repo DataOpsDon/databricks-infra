@@ -13,3 +13,9 @@ variable "storage_root" {
   type        = string
   default     = null
 }
+
+variable "name" {
+  description = "Name of the Databricks metastore. Defaults to metastore_<region> when null"
+  type        = string
+  default     = null
+}
