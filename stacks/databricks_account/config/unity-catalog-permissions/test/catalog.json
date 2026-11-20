@@ -1,0 +1,56 @@
+{
+  "changes": [
+    {
+      "principal": "AAD-RBAC-SUB-Applications-Framework-TEST-dataadmins",
+      "add": [
+        "CREATE_VOLUME",
+        "WRITE_VOLUME",
+        "MANAGE",
+        "USE_CATALOG",
+        "USE_SCHEMA",
+        "CREATE_SCHEMA",
+        "CREATE_TABLE",
+        "CREATE_MODEL",
+        "CREATE_MATERIALIZED_VIEW",
+        "CREATE_FUNCTION",
+        "SELECT",
+        "BROWSE",
+        "REFRESH",
+        "READ_VOLUME",
+        "MODIFY",
+        "EXECUTE",
+        "APPLY_TAG"
+      ]
+    },
+    {
+      "principal": "AAD-RBAC-SUB-Applications-Framework-TEST-dataengineers",
+      "add": [
+        "WRITE_VOLUME",
+        "USE_CATALOG",
+        "USE_SCHEMA",
+        "CREATE_SCHEMA",
+        "CREATE_TABLE",
+        "CREATE_MODEL",
+        "CREATE_MATERIALIZED_VIEW",
+        "CREATE_FUNCTION",
+        "SELECT",
+        "BROWSE",
+        "REFRESH",
+        "READ_VOLUME",
+        "MODIFY",
+        "EXECUTE",
+        "APPLY_TAG"
+      ]
+    },
+    {
+      "principal": "AAD-RBAC-SUB-Applications-Framework-TEST-datareaders",
+      "add": [
+        "USE_CATALOG",
+        "USE_SCHEMA",
+        "SELECT",
+        "BROWSE",
+        "READ_VOLUME"
+      ]
+    }
+  ]
+}

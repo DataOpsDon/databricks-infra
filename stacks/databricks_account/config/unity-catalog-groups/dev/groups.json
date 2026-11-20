@@ -1,0 +1,8 @@
+{
+    "groups": [
+        "edp-dev-consumer-contractmargin",
+        "edp-dev-admins",
+        "edp-dev-developers"
+    ],
+    "owner": "edp-dev-developers"
+}

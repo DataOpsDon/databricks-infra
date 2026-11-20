@@ -1,0 +1,30 @@
+{
+  "changes": [
+    {
+      "principal": "edp-uat-admins",
+      "add": [
+        "CREATE_EXTERNAL_VOLUME",
+        "CREATE_MANAGED_STORAGE",
+        "MANAGE"
+      ]
+    },
+    {
+      "principal": "edp-uat-developers",
+      "add": [
+        "READ_FILES",
+        "WRITE_FILES",
+        "CREATE_EXTERNAL_TABLE",
+        "BROWSE"
+      ]
+    },
+    {
+      "principal": "edp-uat-admins",
+      "add": [
+        "READ_FILES",
+        "WRITE_FILES",
+        "CREATE_EXTERNAL_TABLE",
+        "BROWSE"
+      ]
+    }
+  ]
+}

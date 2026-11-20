@@ -1,0 +1,32 @@
+{
+  "changes": [
+    {
+      "principal": "AAD-RBAC-SUB-Applications-Framework-TEST-dataadmins",
+      "add": [
+        "CREATE_EXTERNAL_VOLUME",
+        "CREATE_MANAGED_STORAGE",
+        "MANAGE",
+        "READ_FILES",
+        "WRITE_FILES",
+        "CREATE_EXTERNAL_TABLE",
+        "BROWSE"
+      ]
+    },
+      {
+        "principal": "AAD-RBAC-SUB-Applications-Framework-TEST-dataengineers",
+        "add": [
+          "READ_FILES",
+          "WRITE_FILES",
+          "CREATE_EXTERNAL_TABLE",
+          "BROWSE"
+        ]
+      },
+      {
+        "principal": "AAD-RBAC-SUB-Applications-Framework-TEST-datareaders",
+        "add": [
+          "READ_FILES",
+          "BROWSE"
+        ]
+      }
+    ]
+  }

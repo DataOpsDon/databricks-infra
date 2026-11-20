@@ -1,0 +1,8 @@
+{
+    "catalogs": {
+        "edp-dev-resources": "unity-catalog",
+        "edp-dev-bronze": "bronze",
+        "edp-dev-silver": "silver",
+        "edp-dev-gold": "gold"
+    }
+}

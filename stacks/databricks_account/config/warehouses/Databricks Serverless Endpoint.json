@@ -1,0 +1,12 @@
+{
+    "name" : "Databricks Serverless Endpoint",
+    "cluster_size" : "2X-Small",
+    "auto_stop_mins" : 5,
+    "min_num_clusters" : 1,
+    "max_num_clusters" : 1,
+    "enable_serverless_compute" : true,
+    "auto_resume" : true,
+    "spot_instance_policy" : "COST_OPTIMIZED",
+    "enable_photon" : true,
+    "warehouse_type" : "PRO"
+}

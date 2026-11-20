@@ -1,0 +1,7 @@
+{
+    "groups": [
+        "edp-prd-admins",
+        "edp-prd-developers"
+    ],
+    "owner": "spn-iac-dataplatform-prd"
+}

@@ -1,0 +1,30 @@
+{
+  "changes": [
+    {
+      "principal": "edp-prd-admins",
+      "add": [
+        "CREATE_EXTERNAL_VOLUME",
+        "CREATE_MANAGED_STORAGE",
+        "MANAGE"
+      ]
+    },
+    {
+      "principal": "edp-prd-developers",
+      "add": [
+        "READ_FILES",
+        "WRITE_FILES",
+        "CREATE_EXTERNAL_TABLE",
+        "BROWSE"
+      ]
+    },
+    {
+      "principal": "edp-prd-admins",
+      "add": [
+        "READ_FILES",
+        "WRITE_FILES",
+        "CREATE_EXTERNAL_TABLE",
+        "BROWSE"
+      ]
+    }
+  ]
+}

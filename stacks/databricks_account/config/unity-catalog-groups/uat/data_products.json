@@ -1,0 +1,7 @@
+{
+    "groups": [
+        "edp-uat-admins",
+        "edp-uat-developers"
+    ],
+    "owner": "spn-iac-dataplatform-uat"
+}
