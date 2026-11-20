@@ -47,7 +47,7 @@ output "private_dns_zone_blob_id" {
   value       = module.private_dns_zone_blob.resource_id
 }
 
-output "databricks_workspace_id" {
+output "databricks_workspace_resource_id" {
   description = "The Azure resource ID of the Databricks workspace"
   value       = module.databricks_workspace.resource_id
 }
@@ -55,6 +55,11 @@ output "databricks_workspace_id" {
 output "databricks_workspace_url" {
   description = "The workspace URL (resolves to a private IP through the private DNS zone)"
   value       = module.databricks_workspace.databricks_workspace_url
+}
+
+output "databricks_workspace_id" {
+  value       = module.databricks_workspace.databricks_workspace_id
+  description = "Unique identifier of the databricks workspace"
 }
 
 output "bastion_name" {

@@ -29,3 +29,8 @@ output "virtual_network_id" {
   description = "The ID of the shared virtual network"
   value       = module.virtual_network.resource_id
 }
+
+output "databricks_workspace_id" {
+  value       = module.databricks_workspace.databricks_workspace_id
+  description = "Unique identifier of the databricks workspace"
+}

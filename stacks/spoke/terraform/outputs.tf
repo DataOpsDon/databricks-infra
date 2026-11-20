@@ -31,10 +31,16 @@ output "data_lake_name" {
   value       = module.data_lake.name
 }
 
-output "databricks_workspace_id" {
+output "databricks_workspace_resource_id" {
   description = "The Azure resource ID of the Databricks workspace"
   value       = module.databricks_workspace.resource_id
 }
+
+output "databricks_workspace_id" {
+  value       = module.databricks_workspace.databricks_workspace_id
+  description = "Unique identifier of the databricks workspace"
+}
+
 
 output "databricks_workspace_url" {
   description = "The workspace URL (resolves to a private IP through the private DNS zone)"
