@@ -80,39 +80,39 @@ module "naming" {
 
 // Module: external_location_permissions
 // Purpose: Grants on each external location from the per-environment config JSON.
-module "external_location_permissions" {
-  source               = "../../../templates/modules/uc_data_external_location_permissions"
-  for_each             = module.external_locations
-  external_location_id = each.value.name
-  json_file_path       = lower("../config/unity-catalog-permissions/${var.environment}/external_location.json")
-  providers = {
-    databricks = databricks.workspace
-  }
-}
-
-// Module: catalog_permissions
-// Purpose: Grants on each catalog from the per-environment catalog_<layer>.json.
-module "catalog_permissions" {
-  source         = "../../../templates/modules/uc_data_catalog_permissions"
-  for_each       = local.catalog_names
-  catalogs       = [each.value]
-  json_file_path = lower("../config/unity-catalog-permissions/${var.environment}/catalog_${each.key}.json")
-  providers = {
-    databricks = databricks.workspace
-  }
-  depends_on = [module.catalogs]
-}
-
-
-// Module: workspace_admins
-// Purpose: Assigns the databricks_admins account group to the spoke workspace as workspace admins.
-module "workspace_admins" {
-  source       = "../../../templates/modules/uc_databricks_workspace_assignment"
-  workspace_id = local.workspace_id
-  principal_id = "databricks_admins"
-  role         = "ADMIN"
-  providers = {
-    databricks          = databricks.workspace
-    databricks.accounts = databricks.accounts
-  }
-}
+//module "external_location_permissions" {
+//  source               = "../../../templates/modules/uc_data_external_location_permissions"
+//  for_each             = module.external_locations
+//  external_location_id = each.value.name
+//  json_file_path       = lower("../config/unity-catalog-permissions/${var.environment}/external_location.json")
+//  providers = {
+//    databricks = databricks.workspace
+//  }
+//}
+//
+//// Module: catalog_permissions
+//// Purpose: Grants on each catalog from the per-environment catalog_<layer>.json.
+//module "catalog_permissions" {
+//  source         = "../../../templates/modules/uc_data_catalog_permissions"
+//  for_each       = local.catalog_names
+//  catalogs       = [each.value]
+//  json_file_path = lower("../config/unity-catalog-permissions/${var.environment}/catalog_${each.key}.json")
+//  providers = {
+//    databricks = databricks.workspace
+//  }
+//  depends_on = [module.catalogs]
+//}
+//
+//
+//// Module: workspace_admins
+//// Purpose: Assigns the databricks_admins account group to the spoke workspace as workspace admins.
+//module "workspace_admins" {
+//  source       = "../../../templates/modules/uc_databricks_workspace_assignment"
+//  workspace_id = local.workspace_id
+//  principal_id = "databricks_admins"
+//  role         = "ADMIN"
+//  providers = {
+//    databricks          = databricks.workspace
+//    databricks.accounts = databricks.accounts
+//  }
+//}
