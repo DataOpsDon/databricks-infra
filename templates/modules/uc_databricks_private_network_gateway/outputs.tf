@@ -12,3 +12,8 @@ output "gateway_state" {
   description = "Lifecycle state of the private network gateway"
   value       = databricks_private_network_gateway.main.state
 }
+
+output "bound_workspace_ids" {
+  description = "Workspace IDs the NCC is attached to"
+  value       = [for binding in databricks_mws_ncc_binding.workspace : binding.workspace_id]
+}

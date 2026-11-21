@@ -31,3 +31,10 @@ resource "databricks_private_network_gateway" "main" {
     }
   ]
 }
+
+// Attaches the NCC (and so the gateway) to each workspace. A workspace can use only one NCC.
+resource "databricks_mws_ncc_binding" "workspace" {
+  for_each                       = var.workspace_ids
+  network_connectivity_config_id = databricks_mws_network_connectivity_config.main.network_connectivity_config_id
+  workspace_id                   = each.value
+}
