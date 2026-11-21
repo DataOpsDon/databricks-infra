@@ -71,3 +71,8 @@ output "csv_storage_name" {
   description = "The name of the CSV storage account"
   value       = module.csv_storage.name
 }
+
+output "databricks_gateway_subnet_id" {
+  description = "The resource ID of the Databricks private network gateway subnet (/25)"
+  value       = module.virtual_network.subnets["databricks_gateway"].resource_id
+}
