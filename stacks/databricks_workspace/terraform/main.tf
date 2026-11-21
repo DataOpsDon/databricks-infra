@@ -118,3 +118,4 @@ module "catalog_permissions" {
   }
   depends_on = [module.catalogs]
 }
+
