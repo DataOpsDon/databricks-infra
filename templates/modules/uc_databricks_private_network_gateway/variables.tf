@@ -51,3 +51,9 @@ variable "dns_resolver_ips" {
   description = "Private DNS resolver IP addresses reachable from the gateway"
   default     = []
 }
+
+variable "workspace_ids" {
+  type        = map(string)
+  description = "Map of workspace name to numeric Databricks workspace ID to attach the NCC to"
+  default     = {}
+}

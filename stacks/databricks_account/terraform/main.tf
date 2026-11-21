@@ -47,6 +47,7 @@ module "private_network_gateway" {
   traffic_mode                       = "ALL_TRAFFIC"
   destinations                       = var.private_gateway_destinations
   dns_resolver_ips                   = var.private_gateway_dns_resolver_ips
+  workspace_ids                      = local.workspace_ids
   providers = {
     databricks = databricks.accounts
   }
