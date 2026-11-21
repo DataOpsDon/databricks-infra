@@ -1,7 +1,7 @@
 {
   "changes": [
     {
-      "principal": "AAD-RBAC-SUB-Applications-Framework-PROD-dataadmins",
+      "principal": "ed5f2993-5240-4e94-9ec8-a2bacf67a6d2",
       "add": [
         "CREATE_VOLUME",
         "WRITE_VOLUME",
@@ -23,9 +23,11 @@
       ]
     },
     {
-      "principal": "AAD-RBAC-SUB-Applications-Framework-PROD-dataengineers",
+      "principal": "4312b81e-713f-4657-b996-ec8241589772",
       "add": [
+        "CREATE_VOLUME",
         "WRITE_VOLUME",
+        "MANAGE",
         "USE_CATALOG",
         "USE_SCHEMA",
         "CREATE_SCHEMA",
@@ -40,16 +42,6 @@
         "MODIFY",
         "EXECUTE",
         "APPLY_TAG"
-      ]
-    },
-    {
-      "principal": "AAD-RBAC-SUB-Applications-Framework-PROD-datareaders",
-      "add": [
-        "USE_CATALOG",
-        "USE_SCHEMA",
-        "SELECT",
-        "BROWSE",
-        "READ_VOLUME"
       ]
     }
   ]
