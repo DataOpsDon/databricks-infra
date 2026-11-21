@@ -1,16 +1,7 @@
 {
   "changes": [
     {
-      "principal": "ed5f2993-5240-4e94-9ec8-a2bacf67a6d2",
-      "add": [
-        "CREATE_CATALOG",
-        "CREATE_EXTERNAL_LOCATION",
-        "CREATE_STORAGE_CREDENTIAL",
-        "MANAGE_ALLOWLIST"
-      ]
-    },
-    {
-      "principal": "4312b81e-713f-4657-b996-ec8241589772",
+      "principal": "5ce9ee1d-309c-4581-857c-e7301997690a",
       "add": [
         "CREATE_CATALOG",
         "CREATE_EXTERNAL_LOCATION",

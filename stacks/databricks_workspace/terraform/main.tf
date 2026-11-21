@@ -44,7 +44,7 @@ module "catalogs" {
   data_lake_name     = local.data_lake_name
   catalog_names      = local.catalog_names
   catalog_containers = local.catalog_containers
-  owner              = var.owner
+  owner              = var.catalog_owner
   metastore_id       = data.databricks_current_metastore.current.id
   providers = {
     databricks = databricks.workspace

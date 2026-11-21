@@ -68,3 +68,8 @@ variable "spoke_state_key" {
   description = "State blob key of the spoke stack."
   type        = string
 }
+
+variable "catalog_owner" {
+  description = "Principal that owns the data catalogs (account group display name, user, or service principal application ID)."
+  type        = string
+}
