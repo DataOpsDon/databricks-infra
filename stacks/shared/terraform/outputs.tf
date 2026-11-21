@@ -29,3 +29,19 @@ output "virtual_network_id" {
   description = "The ID of the shared virtual network"
   value       = module.virtual_network.resource_id
 }
+
+output "sql_vm_name" {
+  description = "Name of the SQL Server VM (connect with Bastion in the hub)"
+  value       = module.sql_vm.name
+}
+
+output "sql_vm_admin_username" {
+  description = "Admin user name of the SQL Server VM"
+  value       = module.sql_vm.admin_username
+}
+
+output "sql_vm_admin_password" {
+  description = "Generated admin password of the SQL Server VM"
+  value       = module.sql_vm.admin_password
+  sensitive   = true
+}
