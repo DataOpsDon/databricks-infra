@@ -14,5 +14,5 @@ hub_virtual_network_id             = "/subscriptions/1e1f62ac-0120-4c72-b6a7-87e
 hub_private_dns_zone_databricks_id = "/subscriptions/1e1f62ac-0120-4c72-b6a7-87eb14060fb9/resourceGroups/rg-hub-dev-uks/providers/Microsoft.Network/privateDnsZones/privatelink.azuredatabricks.net"
 hub_private_dns_zone_dfs_id        = "/subscriptions/1e1f62ac-0120-4c72-b6a7-87eb14060fb9/resourceGroups/rg-hub-dev-uks/providers/Microsoft.Network/privateDnsZones/privatelink.dfs.core.windows.net"
 hub_private_dns_zone_blob_id       = "/subscriptions/1e1f62ac-0120-4c72-b6a7-87eb14060fb9/resourceGroups/rg-hub-dev-uks/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net"
-dns_servers                        = [] # set to the hub resolver inbound IP, e.g. ["10.10.0.132"]
+dns_servers                        = ["10.10.0.132"] # hub private DNS resolver inbound IP
 vnet_address_space                 = "10.20.0.0/22"
