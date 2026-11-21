@@ -8,6 +8,19 @@
 // Module: naming
 // Purpose: Centralised naming standards for resources (location, project, environment, LZ short code).
 
+// Module: storage_credential
+// Purpose: Unity Catalog storage credential backed by the spoke's Databricks access connector.
+module "storage_credential" {
+  source       = "../../../templates/modules/uc_storage_credential"
+  name         = "sc-${var.project}-${var.environment}-${var.location_short}"
+  connector_id = data.terraform_remote_state.spoke.outputs.access_connector_id
+  owner        = var.owner
+  workspace_id = local.workspace_id
+  providers = {
+    databricks = databricks.workspace
+  }
+}
+
 // Module: external_locations
 // Purpose: One external location per medallion container. Required so the catalogs can use the containers as storage root.
 module "external_locations" {
