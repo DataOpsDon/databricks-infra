@@ -120,6 +120,12 @@ module "jumpbox" {
 
   encryption_at_host_enabled = var.jumpbox_encryption_at_host_enabled
 
+  managed_identities = {
+    system_assigned = true
+  }
+
+  extensions = local.aad_login_extension
+
   os_disk = {
     caching              = "ReadWrite"
     storage_account_type = "StandardSSD_LRS"
@@ -168,6 +174,12 @@ module "sql_vm" {
   tags                = var.tags
 
   encryption_at_host_enabled = var.jumpbox_encryption_at_host_enabled
+
+  managed_identities = {
+    system_assigned = true
+  }
+
+  extensions = local.aad_login_extension
 
   os_disk = {
     caching              = "ReadWrite"
