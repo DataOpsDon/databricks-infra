@@ -84,7 +84,7 @@ variable "private_gateway_bandwidth_tier" {
 variable "private_gateway_destinations" {
   description = "Private DNS names routed through the private network gateway."
   type        = list(string)
-  default     = ["sqlvm.jdops.tech"]
+  default     = []
 }
 
 variable "private_gateway_dns_resolver_ips" {
