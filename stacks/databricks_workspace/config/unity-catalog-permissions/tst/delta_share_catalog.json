@@ -3,15 +3,8 @@
     {
       "principal": "databricks_admins",
       "add": [
-        "MANAGE",
-        "USE_CATALOG",
-        "USE_SCHEMA",
-        "SELECT",
-        "BROWSE",
-        "READ_VOLUME",
-        "MODIFY",
-        "EXECUTE",
-        "APPLY_TAG"
+        "ALL_PRIVILEGES",
+        "MANAGE"
       ]
     }
   ]

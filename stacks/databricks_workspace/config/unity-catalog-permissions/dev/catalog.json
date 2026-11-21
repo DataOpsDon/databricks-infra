@@ -3,23 +3,8 @@
     {
       "principal": "databricks_admins",
       "add": [
-        "CREATE_VOLUME",
-        "WRITE_VOLUME",
-        "MANAGE",
-        "USE_CATALOG",
-        "USE_SCHEMA",
-        "CREATE_SCHEMA",
-        "CREATE_TABLE",
-        "CREATE_MODEL",
-        "CREATE_MATERIALIZED_VIEW",
-        "CREATE_FUNCTION",
-        "SELECT",
-        "BROWSE",
-        "REFRESH",
-        "READ_VOLUME",
-        "MODIFY",
-        "EXECUTE",
-        "APPLY_TAG"
+        "ALL_PRIVILEGES",
+        "MANAGE"
       ]
     }
   ]
