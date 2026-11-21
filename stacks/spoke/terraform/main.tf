@@ -42,7 +42,7 @@ module "network_security_group" {
 }
 
 // Module: virtual_network
-// Purpose: Spoke virtual network (/22) with two /26 Databricks subnets (host and container) and a /26 subnet for
+// Purpose: Spoke virtual network (/22) with two /26 Databricks subnets (host and container), a /25 Databricks gateway subnet and a /26 subnet for
 // private endpoints. Peered to the hub in both directions (the reverse peering is created in the hub VNet's group).
 module "virtual_network" {
   source           = "Azure/avm-res-network-virtualnetwork/azurerm"
@@ -87,6 +87,19 @@ module "virtual_network" {
     private_endpoints = {
       name             = local.subnet_names.private_endpoints
       address_prefixes = [local.subnet_prefixes.private_endpoints]
+    }
+    databricks_gateway = {
+      name             = local.subnet_names.databricks_gateway
+      address_prefixes = [local.subnet_prefixes.databricks_gateway]
+      network_security_group = {
+        id = module.network_security_group.resource_id
+      }
+      delegations = [{
+        name = "databricks"
+        service_delegation = {
+          name = "Microsoft.Databricks/workspaces"
+        }
+      }]
     }
   }
 
