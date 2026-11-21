@@ -1,15 +1,10 @@
 {
   "changes": [
     {
-      "principal": "ed5f2993-5240-4e94-9ec8-a2bacf67a6d2",
+      "principal": "databricks_admins",
       "add": [
-        "CREATE_EXTERNAL_VOLUME",
-        "CREATE_MANAGED_STORAGE",
-        "MANAGE",
-        "READ_FILES",
-        "WRITE_FILES",
-        "CREATE_EXTERNAL_TABLE",
-        "BROWSE"
+        "ALL_PRIVILEGES",
+        "MANAGE"
       ]
     }
   ]
