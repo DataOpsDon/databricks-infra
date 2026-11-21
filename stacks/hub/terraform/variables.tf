@@ -60,3 +60,15 @@ variable "spoke_virtual_network_ids" {
   type        = map(string)
   default     = {}
 }
+
+variable "private_dns_zone_name" {
+  description = "Name of the private DNS zone for internal names."
+  type        = string
+  default     = "jdops.tech"
+}
+
+variable "sql_vm_private_ip" {
+  description = "Private IP of the shared SQL Server VM, registered as sqlvm in the internal private DNS zone."
+  type        = string
+  default     = "10.30.0.68"
+}

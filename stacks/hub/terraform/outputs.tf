@@ -66,3 +66,8 @@ output "bastion_name" {
   description = "Name of the Bastion host (Standard SKU)"
   value       = module.bastion.name
 }
+
+output "private_dns_zone_internal_id" {
+  description = "Resource ID of the internal private DNS zone"
+  value       = module.private_dns_zone_internal.resource_id
+}

@@ -198,6 +198,42 @@ module "private_dns_zone_blob" {
   )
 }
 
+// Module: private_dns_zone_internal
+// Purpose: Private zone for internal names (var.private_dns_zone_name) with an A record for the shared SQL Server VM.
+// Linked to the hub VNet (so the hub DNS resolver answers for it), plus any VNets listed in var.spoke_virtual_network_ids.
+module "private_dns_zone_internal" {
+  source           = "Azure/avm-res-network-privatednszone/azurerm"
+  version          = "0.6.0"
+  enable_telemetry = false
+  parent_id        = module.resource_group.resource_id
+  domain_name      = var.private_dns_zone_name
+  tags             = var.tags
+
+  virtual_network_links = merge(
+    {
+      hub = {
+        name               = "link-${module.naming.virtual_network.name}"
+        virtual_network_id = module.virtual_network.resource_id
+      }
+    },
+    {
+      for k, id in var.spoke_virtual_network_ids : k => {
+        name               = "link-${k}-${local.name_suffix}"
+        virtual_network_id = id
+      }
+    }
+  )
+
+  a_records = {
+    sqlvm = {
+      name         = "sqlvm"
+      ttl          = 300
+      records      = [var.sql_vm_private_ip]
+      ip_addresses = null
+    }
+  }
+}
+
 // Module: databricks_workspace
 // Purpose: Premium Databricks workspace injected into the hub VNet (secure cluster connectivity, no public IPs),
 // with public network access enabled, and private endpoints for private access:
