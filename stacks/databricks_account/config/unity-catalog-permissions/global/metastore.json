@@ -1,7 +1,7 @@
 {
   "changes": [
     {
-      "principal": "5ce9ee1d-309c-4581-857c-e7301997690a",
+      "principal": "databricks_metastore_admins",
       "add": [
         "CREATE_CATALOG",
         "CREATE_EXTERNAL_LOCATION",
