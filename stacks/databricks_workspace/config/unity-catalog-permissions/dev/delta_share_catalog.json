@@ -15,7 +15,7 @@
       ]
     },
     {
-      "principal": "4312b81e-713f-4657-b996-ec8241589772",
+      "principal": "databricks_admins",
       "add": [
         "MANAGE",
         "USE_CATALOG",
