@@ -25,7 +25,7 @@ module "metastore" {
 // Purpose: Assigns the metastore to each workspace (keyed by a friendly name, value is the numeric Databricks workspace ID).
 module "metastore_assignment" {
   source       = "../../../templates/modules/uc_metastore_assigment"
-  for_each     = var.workspace_ids
+  for_each     = local.workspace_ids
   metastore_id = module.metastore.id
   workspace_id = each.value
   providers = {
