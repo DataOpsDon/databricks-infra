@@ -193,3 +193,19 @@ module "sql_vm" {
     }
   }
 }
+
+// Module: sql_virtual_machine
+// Purpose: Registers the SQL Server VM with the SQL IaaS Agent extension (portal SQL management, patching and backup
+// features). The SQL virtual machine resource must have the same name as the VM.
+module "sql_virtual_machine" {
+  source                      = "Azure/avm-res-sqlvirtualmachine-sqlvirtualmachine/azurerm"
+  version                     = "0.1.0"
+  enable_telemetry            = var.enable_telemetry
+  location                    = var.location
+  resource_group_name         = module.resource_group.name
+  name                        = module.sql_vm.name
+  virtual_machine_resource_id = module.sql_vm.resource_id
+  sql_management              = "Full"
+  sql_server_license_type     = "PAYG"
+  tags                        = var.tags
+}
