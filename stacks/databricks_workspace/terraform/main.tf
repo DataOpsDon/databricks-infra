@@ -23,16 +23,16 @@ module "naming" {
 
 // Module: storage_credential
 // Purpose: Unity Catalog storage credential backed by the spoke's Databricks access connector.
-module "storage_credential" {
-  source       = "../../../templates/modules/uc_storage_credential"
-  name         = "sc-${var.project}-${var.environment}-${var.location_short}"
-  connector_id = data.terraform_remote_state.spoke.outputs.access_connector_id
-  owner        = var.owner
-  workspace_id = local.workspace_id
-  providers = {
-    databricks = databricks.workspace
-  }
-}
+//module "storage_credential" {
+//  source       = "../../../templates/modules/uc_storage_credential"
+//  name         = "sc-${var.project}-${var.environment}-${var.location_short}"
+//  connector_id = data.terraform_remote_state.spoke.outputs.access_connector_id
+//  owner        = var.owner
+//  workspace_id = local.workspace_id
+//  providers = {
+//    databricks = databricks.workspace
+//  }
+//}
 
 // Module: external_locations
 // Purpose: One external location per medallion container. Required so the catalogs can use the containers as storage root.
@@ -78,14 +78,14 @@ module "metastore_permissions" {
 
 // Module: storage_credential_permissions
 // Purpose: Grants on the storage credential from the per-environment config JSON.
-module "storage_credential_permissions" {
-  source                = "../../../templates/modules/uc_data_storage_credential_permissions"
-  storage_credential_id = module.storage_credential.name
-  json_file_path        = lower("../config/unity-catalog-permissions/${var.environment}/storage_credential.json")
-  providers = {
-    databricks = databricks.workspace
-  }
-}
+//module "storage_credential_permissions" {
+//  source                = "../../../templates/modules/uc_data_storage_credential_permissions"
+//  storage_credential_id = module.storage_credential.name
+//  json_file_path        = lower("../config/unity-catalog-permissions/${var.environment}/storage_credential.json")
+//  providers = {
+//    databricks = databricks.workspace
+//  }
+//}
 
 // Module: external_location_permissions
 // Purpose: Grants on each external location from the per-environment config JSON.
