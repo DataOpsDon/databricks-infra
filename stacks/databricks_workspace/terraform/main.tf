@@ -7,6 +7,26 @@
 
 // Module: naming
 // Purpose: Centralised naming standards for resources (location, project, environment, LZ short code).
+module "naming" {
+  source   = "../../../templates/utils"
+  location = var.location
+  project  = var.project
+  lz       = "<FILL ME IN>"
+  suffix   = var.environment
+  lz_short = "<FILL ME IN>"
+}
+
+// Module: resource_group
+// Purpose: Creates the databricks_workspace resource group to contain all resources in this stack.
+module "resource_group" {
+  source           = "Azure/avm-res-resources-resourcegroup/azurerm"
+  version          = "0.2.1"
+  enable_telemetry = var.enable_telemetry
+  location         = var.location
+  name             = "${module.naming.name.resource_group}-databricks_workspace"
+  tags             = var.tags
+}
+
 
 // Module: storage_credential
 // Purpose: Unity Catalog storage credential backed by the spoke's Databricks access connector.
@@ -44,7 +64,7 @@ module "catalogs" {
   data_lake_name     = local.data_lake_name
   catalog_names      = local.catalog_names
   catalog_containers = local.catalog_containers
-  owner              = var.catalog_owner
+  owner              = var.owner
   metastore_id       = data.databricks_current_metastore.current.id
   providers = {
     databricks = databricks.workspace
