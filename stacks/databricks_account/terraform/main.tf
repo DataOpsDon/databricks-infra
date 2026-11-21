@@ -32,3 +32,4 @@ module "metastore_assignment" {
     databricks = databricks.accounts
   }
 }
+

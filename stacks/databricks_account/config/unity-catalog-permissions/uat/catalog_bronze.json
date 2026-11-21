@@ -1,16 +1,11 @@
 {
   "changes": [
     {
-      "principal": "edp-uat-admins",
+      "principal": "ed5f2993-5240-4e94-9ec8-a2bacf67a6d2",
       "add": [
         "CREATE_VOLUME",
         "WRITE_VOLUME",
-        "MANAGE"
-      ]
-    },
-    {
-      "principal": "edp-uat-developers",
-      "add": [
+        "MANAGE",
         "USE_CATALOG",
         "USE_SCHEMA",
         "CREATE_SCHEMA",
@@ -28,8 +23,11 @@
       ]
     },
     {
-      "principal": "edp-uat-admins",
+      "principal": "4312b81e-713f-4657-b996-ec8241589772",
       "add": [
+        "CREATE_VOLUME",
+        "WRITE_VOLUME",
+        "MANAGE",
         "USE_CATALOG",
         "USE_SCHEMA",
         "CREATE_SCHEMA",
