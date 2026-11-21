@@ -33,3 +33,21 @@ module "metastore_assignment" {
   }
 }
 
+
+// Module: private_network_gateway
+// Purpose: Network connectivity configuration with a private network gateway that lets serverless compute reach private
+// destinations in the spoke VNet. The gateway uses the /25 Databricks gateway subnet created by the spoke stack.
+module "private_network_gateway" {
+  source                             = "../../../templates/modules/uc_databricks_private_network_gateway"
+  ncc_name                           = "ncc-${var.project}-${var.environment}-${var.location_short}"
+  region                             = var.location
+  display_name                       = "pgw-${var.project}-${var.environment}-${var.location_short}"
+  subnet_resource_id                 = data.terraform_remote_state.spoke.outputs.databricks_gateway_subnet_id
+  bandwidth_tier_gigabits_per_second = var.private_gateway_bandwidth_tier
+  traffic_mode                       = "SPECIFIC_DESTINATIONS"
+  destinations                       = var.private_gateway_destinations
+  dns_resolver_ips                   = var.private_gateway_dns_resolver_ips
+  providers = {
+    databricks = databricks.accounts
+  }
+}

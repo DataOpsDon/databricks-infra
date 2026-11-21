@@ -74,3 +74,21 @@ variable "spoke_state_key" {
   description = "State blob key of the spoke stack."
   type        = string
 }
+
+variable "private_gateway_bandwidth_tier" {
+  description = "Bandwidth tier of the private network gateway in Gbps (10, 30, 50 or 100)."
+  type        = number
+  default     = 10
+}
+
+variable "private_gateway_destinations" {
+  description = "Private DNS names routed through the private network gateway."
+  type        = list(string)
+  default     = ["sqlvm.jdops.tech"]
+}
+
+variable "private_gateway_dns_resolver_ips" {
+  description = "Private DNS resolver IPs the gateway uses to resolve the destinations (the hub resolver inbound IP)."
+  type        = list(string)
+  default     = ["10.10.0.132"]
+}
