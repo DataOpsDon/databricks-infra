@@ -18,14 +18,7 @@ module "naming" {
 
 // Module: resource_group
 // Purpose: Creates the databricks_workspace resource group to contain all resources in this stack.
-module "resource_group" {
-  source           = "Azure/avm-res-resources-resourcegroup/azurerm"
-  version          = "0.2.1"
-  enable_telemetry = var.enable_telemetry
-  location         = var.location
-  name             = "${module.naming.name.resource_group}-databricks_workspace"
-  tags             = var.tags
-}
+
 
 
 // Module: storage_credential
