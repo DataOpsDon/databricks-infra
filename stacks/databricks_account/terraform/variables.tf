@@ -50,12 +50,6 @@ variable "metastore_name" {
   default     = "metastore-uks"
 }
 
-variable "workspace_ids" {
-  description = "Map of workspace name to numeric Databricks workspace ID (not the Azure resource ID) to assign the metastore to."
-  type        = map(string)
-  default     = {}
-}
-
 variable "tf_state_resource_group_name" {
   description = "Resource group of the storage account holding the Terraform state (shared by all stacks)."
   type        = string
