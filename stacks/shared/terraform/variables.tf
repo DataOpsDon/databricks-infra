@@ -94,3 +94,27 @@ variable "jumpbox_encryption_at_host_enabled" {
   type        = bool
   default     = false
 }
+
+variable "sql_vm_computer_name" {
+  description = "Windows computer name of the SQL Server VM (15 characters or fewer)."
+  type        = string
+  default     = "sqlvm01"
+}
+
+variable "sql_vm_sku_size" {
+  description = "VM size of the SQL Server VM."
+  type        = string
+  default     = "Standard_D2ds_v5"
+}
+
+variable "sql_image_offer" {
+  description = "Marketplace offer of the SQL Server image (SQL version on Windows Server)."
+  type        = string
+  default     = "sql2022-ws2022"
+}
+
+variable "sql_image_sku" {
+  description = "Marketplace SKU of the SQL Server image. sqldev-gen2 is Developer edition (free, not licensed for production); use standard-gen2 or enterprise-gen2 for a licensed edition."
+  type        = string
+  default     = "sqldev-gen2"
+}
