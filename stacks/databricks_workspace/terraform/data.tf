@@ -13,6 +13,7 @@ data "terraform_remote_state" "spoke" {
 }
 
 // The metastore assigned to this workspace (assignment is done in the databricks_account stack).
-data "databricks_current_metastore" "current" {
-  provider = databricks.workspace
+data "databricks_metastore" "current" {
+  provider = databricks.accounts
+  name     = "metastore-uks"
 }

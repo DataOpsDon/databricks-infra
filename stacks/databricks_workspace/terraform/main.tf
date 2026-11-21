@@ -7,6 +7,19 @@
 
 // Module: naming
 // Purpose: Centralised naming standards for resources (location, project, environment, LZ short code).
+module "naming" {
+  source   = "../../../templates/utils"
+  location = var.location
+  project  = var.project
+  lz       = "<FILL ME IN>"
+  suffix   = var.environment
+  lz_short = "<FILL ME IN>"
+}
+
+// Module: resource_group
+// Purpose: Creates the databricks_workspace resource group to contain all resources in this stack.
+
+
 
 // Module: storage_credential
 // Purpose: Unity Catalog storage credential backed by the spoke's Databricks access connector.
@@ -44,8 +57,8 @@ module "catalogs" {
   data_lake_name     = local.data_lake_name
   catalog_names      = local.catalog_names
   catalog_containers = local.catalog_containers
-  owner              = var.catalog_owner
-  metastore_id       = data.databricks_current_metastore.current.id
+  owner              = var.owner
+  metastore_id       = data.databricks_metastore.current.id
   providers = {
     databricks = databricks.workspace
   }
@@ -56,7 +69,7 @@ module "catalogs" {
 // Purpose: Metastore-level grants from the global config JSON.
 module "metastore_permissions" {
   source         = "../../../templates/modules/uc_data_metastore_permissions"
-  metastore_id   = data.databricks_current_metastore.current.id
+  metastore_id   = data.databricks_metastore.current.id
   json_file_path = "../config/unity-catalog-permissions/global/metastore.json"
   providers = {
     databricks = databricks.workspace
