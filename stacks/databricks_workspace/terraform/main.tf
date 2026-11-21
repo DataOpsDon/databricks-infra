@@ -112,3 +112,16 @@ module "catalog_permissions" {
   depends_on = [module.catalogs]
 }
 
+
+// Module: workspace_admins
+// Purpose: Assigns the databricks_admins account group to the spoke workspace as workspace admins.
+module "workspace_admins" {
+  source       = "../../../templates/modules/uc_databricks_workspace_assignment"
+  workspace_id = local.workspace_id
+  principal_id = "databricks_admins"
+  role         = "ADMIN"
+  providers = {
+    databricks          = databricks.workspace
+    databricks.accounts = databricks.accounts
+  }
+}
