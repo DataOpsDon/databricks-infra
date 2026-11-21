@@ -44,7 +44,7 @@ module "private_network_gateway" {
   display_name                       = "pgw-${var.project}-${var.environment}-${var.location_short}"
   subnet_resource_id                 = data.terraform_remote_state.spoke.outputs.databricks_gateway_subnet_id
   bandwidth_tier_gigabits_per_second = var.private_gateway_bandwidth_tier
-  traffic_mode                       = "SPECIFIC_DESTINATIONS"
+  traffic_mode                       = "ALL_TRAFFIC"
   destinations                       = var.private_gateway_destinations
   dns_resolver_ips                   = var.private_gateway_dns_resolver_ips
   providers = {
