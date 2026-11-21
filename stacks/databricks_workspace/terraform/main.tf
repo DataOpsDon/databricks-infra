@@ -71,3 +71,50 @@ module "catalogs" {
   }
   depends_on = [module.external_locations]
 }
+
+// Module: metastore_permissions
+// Purpose: Metastore-level grants from the global config JSON.
+module "metastore_permissions" {
+  source         = "../../../templates/modules/uc_data_metastore_permissions"
+  metastore_id   = data.databricks_current_metastore.current.id
+  json_file_path = "../config/unity-catalog-permissions/global/metastore.json"
+  providers = {
+    databricks = databricks.workspace
+  }
+}
+
+// Module: storage_credential_permissions
+// Purpose: Grants on the storage credential from the per-environment config JSON.
+module "storage_credential_permissions" {
+  source                = "../../../templates/modules/uc_data_storage_credential_permissions"
+  storage_credential_id = module.storage_credential.name
+  json_file_path        = lower("../config/unity-catalog-permissions/${var.environment}/storage_credential.json")
+  providers = {
+    databricks = databricks.workspace
+  }
+}
+
+// Module: external_location_permissions
+// Purpose: Grants on each external location from the per-environment config JSON.
+module "external_location_permissions" {
+  source               = "../../../templates/modules/uc_data_external_location_permissions"
+  for_each             = module.external_locations
+  external_location_id = each.value.name
+  json_file_path       = lower("../config/unity-catalog-permissions/${var.environment}/external_location.json")
+  providers = {
+    databricks = databricks.workspace
+  }
+}
+
+// Module: catalog_permissions
+// Purpose: Grants on each catalog from the per-environment catalog_<layer>.json.
+module "catalog_permissions" {
+  source         = "../../../templates/modules/uc_data_catalog_permissions"
+  for_each       = local.catalog_names
+  catalogs       = [each.value]
+  json_file_path = lower("../config/unity-catalog-permissions/${var.environment}/catalog_${each.key}.json")
+  providers = {
+    databricks = databricks.workspace
+  }
+  depends_on = [module.catalogs]
+}
